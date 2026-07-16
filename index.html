@@ -2,469 +2,597 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="assets/css/main.css">
-<link rel="stylesheet" href="assets/js/main.js">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlockForgeBuilds — Custom Minecraft Maps</title>
+<style>
+  :root{
+    --bg-0:#070b14;
+    --bg-1:#0a1420;
+    --bg-2:#0d1830;
+    --cyan:#22d3ee;
+    --cyan-soft:rgba(34,211,238,0.12);
+    --text-0:#f5f7fa;
+    --text-1:#b9c2d0;
+    --text-2:#8792a3;
+    --card:#111a2c;
+    --card-border:rgba(255,255,255,0.06);
+    --radius:20px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    background:var(--bg-0);
+    color:var(--text-0);
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
 
-<title>BlockForge Builds | Minecraft Builder</title>
+  /* ---------- Nav ---------- */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:28px 60px;
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(7,11,20,0.75);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,0.04);
+  }
+  .logo{
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:-0.5px;
+  }
+  .logo span{color:var(--cyan);}
+  nav ul{
+    display:flex;
+    list-style:none;
+    gap:44px;
+  }
+  nav a{
+    font-size:15px;
+    font-weight:600;
+    color:var(--text-0);
+    opacity:0.9;
+    transition:opacity .2s, color .2s;
+    position:relative;
+  }
+  nav a:hover{color:var(--cyan);opacity:1;}
+  .nav-toggle{display:none;background:none;border:none;color:var(--text-0);font-size:26px;cursor:pointer;}
 
+  /* ---------- Hero ---------- */
+  .hero{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:center;
+    gap:40px;
+    padding:100px 60px 120px;
+    max-width:1500px;
+    margin:0 auto;
+    background:
+      radial-gradient(700px 500px at 8% 15%, rgba(20,90,110,0.35), transparent 60%),
+      radial-gradient(900px 600px at 90% -10%, rgba(50,40,110,0.28), transparent 60%);
+  }
+  .hero-copy h1{
+    font-size:56px;
+    line-height:1.08;
+    font-weight:800;
+    letter-spacing:-1.5px;
+    margin-bottom:24px;
+  }
+  .hero-copy h1 .accent{color:var(--cyan);}
+  .hero-copy p{
+    color:var(--text-1);
+    font-size:18px;
+    line-height:1.6;
+    max-width:480px;
+    margin-bottom:36px;
+  }
+  .btn-row{display:flex;gap:16px;}
+  .btn{
+    padding:16px 30px;
+    border-radius:100px;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+    display:inline-flex;
+    align-items:center;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{
+    background:var(--cyan);
+    color:#04202a;
+    box-shadow:0 0 0 0 rgba(34,211,238,0.4);
+  }
+  .btn-primary:hover{box-shadow:0 8px 24px rgba(34,211,238,0.35);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--text-0);
+    border:1px solid rgba(255,255,255,0.25);
+  }
+  .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+  .btn-white{
+    background:#fff;
+    color:#0a1420;
+  }
+  .btn-white:hover{box-shadow:0 8px 24px rgba(255,255,255,0.25);}
 
+  .hero-art{
+    position:relative;
+    border-radius:24px;
+    overflow:hidden;
+    aspect-ratio:16/8.4;
+    box-shadow:0 30px 80px rgba(0,0,0,0.55);
+  }
+  .scene{width:100%;height:100%;display:block;}
+
+  /* ---------- Sections generic ---------- */
+  section{padding:100px 60px;max-width:1500px;margin:0 auto;}
+  .section-title{
+    text-align:center;
+    font-size:38px;
+    font-weight:800;
+    letter-spacing:-1px;
+    margin-bottom:56px;
+  }
+  .section-title span{color:var(--cyan);}
+
+  /* ---------- Builds ---------- */
+  .builds-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:26px;
+  }
+  .build-card{
+    position:relative;
+    border-radius:var(--radius);
+    overflow:hidden;
+    aspect-ratio:16/10;
+    border:1px solid var(--card-border);
+    cursor:pointer;
+    transition:transform .35s ease, box-shadow .35s ease;
+  }
+  .build-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.5);}
+  .build-card svg{width:100%;height:100%;display:block;}
+  .build-label{
+    position:absolute;
+    left:0;right:0;bottom:0;
+    padding:20px 22px 18px;
+    background:linear-gradient(to top, rgba(4,8,16,0.92), transparent);
+  }
+  .build-label h3{font-size:19px;font-weight:800;margin-bottom:4px;}
+  .build-label p{font-size:13.5px;color:var(--text-1);}
+
+  /* ---------- About ---------- */
+  .about{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:start;
+  }
+  .about-copy p{
+    color:var(--text-1);
+    font-size:17px;
+    line-height:1.75;
+    margin-bottom:20px;
+    max-width:460px;
+  }
+  .stat-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  .stat-card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:16px;
+    padding:34px 20px;
+    text-align:center;
+  }
+  .stat-card .num{
+    font-size:32px;
+    font-weight:800;
+    color:var(--cyan);
+    letter-spacing:-1px;
+    margin-bottom:6px;
+  }
+  .stat-card .label{font-size:13.5px;color:var(--text-1);font-weight:600;}
+
+  /* ---------- Services ---------- */
+  .services-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+    margin-bottom:100px;
+  }
+  .service-card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:18px;
+    padding:32px 26px;
+    transition:transform .25s ease, border-color .25s ease;
+  }
+  .service-card:hover{transform:translateY(-4px);border-color:rgba(34,211,238,0.4);}
+  .service-icon{font-size:30px;margin-bottom:18px;display:block;}
+  .service-card h3{font-size:18px;font-weight:800;margin-bottom:10px;}
+  .service-card p{font-size:14px;color:var(--text-1);line-height:1.55;}
+
+  .process-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+  }
+  .process-card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:18px;
+    padding:32px 26px;
+  }
+  .process-num{
+    font-size:26px;
+    font-weight:800;
+    color:var(--cyan);
+    opacity:0.55;
+    margin-bottom:16px;
+    letter-spacing:1px;
+  }
+  .process-card h3{font-size:18px;font-weight:800;margin-bottom:10px;}
+  .process-card p{font-size:14px;color:var(--text-1);line-height:1.6;}
+
+  /* ---------- CTA ---------- */
+  .cta-wrap{padding:0 60px 100px;max-width:1500px;margin:0 auto;}
+  .cta{
+    background:linear-gradient(120deg, #0d2733, #171338 85%);
+    border-radius:28px;
+    padding:70px 40px;
+    text-align:center;
+  }
+  .cta h2{font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:14px;}
+  .cta p{color:var(--text-1);font-size:16px;margin-bottom:32px;}
+  .cta .btn-row{justify-content:center;}
+
+  footer{
+    text-align:center;
+    padding:30px 20px 50px;
+    color:var(--text-2);
+    font-size:13.5px;
+  }
+
+  /* ---------- Reveal animation ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:980px){
+    header{padding:22px 26px;}
+    nav ul{
+      position:fixed;
+      top:74px;left:0;right:0;
+      flex-direction:column;
+      background:var(--bg-1);
+      padding:20px 26px;
+      gap:20px;
+      display:none;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    nav ul.open{display:flex;}
+    .nav-toggle{display:block;}
+    .hero{grid-template-columns:1fr;padding:60px 26px 80px;text-align:left;}
+    .hero-copy h1{font-size:40px;}
+    section{padding:70px 26px;}
+    .builds-grid{grid-template-columns:1fr;}
+    .about{grid-template-columns:1fr;}
+    .services-grid{grid-template-columns:1fr 1fr;}
+    .process-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:560px){
+    .services-grid{grid-template-columns:1fr;}
+    .process-grid{grid-template-columns:1fr;}
+    .stat-grid{grid-template-columns:1fr 1fr;}
+    .btn-row{flex-wrap:wrap;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; scroll-behavior:auto !important;}
+  }
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:3px;
+  }
+</style>
 </head>
-
-
 <body>
 
+<header>
+  <div class="logo">BlockForge<span>Builds</span></div>
+  <button class="nav-toggle" aria-label="Toggle menu" id="navToggle">☰</button>
+  <nav>
+    <ul id="navList">
+      <li><a href="#builds">Builds</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
 
-<nav>
-
-<div class="logo">
-BlockForge<span>Builds</span>
-</div>
-
-
-<ul>
-
-<li><a href="#portfolio">Builds</a></li>
-<li><a href="#about">About</a></li>
-<li><a href="#services">Services</a></li>
-<li><a href="#contact">Contact</a></li>
-
-</ul>
-
-
-</nav>
-
-
-
+<!-- HERO -->
 <section class="hero">
-
-
-<div class="hero-content">
-
-
-<div class="fade-in">
-
-
-<h1>
-Creating
-<span>Custom</span>
- Minecraft Maps
-</h1>
-
-
-<p>
-
-Custom Minecraft builds for servers,
-communities, and creators.
-Turning ideas into detailed builds.
-
-</p>
-
-
-<div class="buttons">
-
-<a href="#portfolio" class="btn primary">
-View Builds
-</a>
-
-
-<a href="#contact" class="btn secondary">
-Hire Me
-</a>
-
-
-</div>
-
-
-</div>
-
-
-
-<div class="hero-image fade-in">
-
-
-<img src="https://cdn.myportfolio.com/8d0ed7b220194a274c6235a5b0354492/332dff49-4309-484d-ad59-08d523fd2320_rw_1920.jpg?h=1e1076e62e8d400fc5fcbef722e5b7c6"
-alt="Minecraft Build">
-
-
-</div>
-
-
-</div>
-
-
+  <div class="hero-copy">
+    <h1>Creating <span class="accent">Custom</span> Minecraft Maps</h1>
+    <p>Custom Minecraft builds for servers, communities, and creators. Turning ideas into detailed builds.</p>
+    <div class="btn-row">
+      <a href="#builds" class="btn btn-primary">View Builds</a>
+      <a href="#contact" class="btn btn-ghost">Hire Me</a>
+    </div>
+  </div>
+  <div class="hero-art">
+    <svg class="scene" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#9fc9e8"/>
+          <stop offset="55%" stop-color="#dce8ea"/>
+          <stop offset="100%" stop-color="#f3ede0"/>
+        </linearGradient>
+        <linearGradient id="mtn" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c7d3e0"/>
+          <stop offset="100%" stop-color="#8ea0b8"/>
+        </linearGradient>
+        <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5f7f92"/>
+          <stop offset="100%" stop-color="#2f4a5c"/>
+        </linearGradient>
+      </defs>
+      <rect width="800" height="450" fill="url(#sky)"/>
+      <polygon points="0,230 90,150 160,210 250,120 340,220 430,140 520,215 610,160 700,225 800,180 800,300 0,300" fill="url(#mtn)" opacity="0.85"/>
+      <polygon points="0,260 120,190 230,240 350,170 470,245 590,195 700,250 800,210 800,320 0,320" fill="#a9b7c9" opacity="0.6"/>
+      <g fill="#2b2f3a">
+        <rect x="60" y="230" width="18" height="60"/>
+        <polygon points="52,230 87,230 69,205"/>
+        <rect x="120" y="245" width="26" height="55"/>
+        <polygon points="115,245 151,245 133,215"/>
+        <rect x="200" y="200" width="20" height="100"/>
+        <polygon points="192,200 228,200 210,165"/>
+        <rect x="260" y="235" width="30" height="65"/>
+        <polygon points="252,235 296,235 274,200"/>
+        <rect x="340" y="180" width="22" height="120"/>
+        <polygon points="330,180 372,180 351,140"/>
+        <rect x="400" y="240" width="24" height="60"/>
+        <polygon points="391,240 431,240 411,205"/>
+        <rect x="470" y="210" width="20" height="90"/>
+        <polygon points="462,210 498,210 480,178"/>
+        <rect x="540" y="250" width="28" height="55"/>
+        <polygon points="533,250 575,250 554,218"/>
+        <rect x="610" y="220" width="20" height="85"/>
+        <polygon points="602,220 638,220 620,188"/>
+        <rect x="670" y="245" width="26" height="60"/>
+        <polygon points="663,245 703,245 683,212"/>
+        <rect x="720" y="205" width="22" height="100"/>
+        <polygon points="712,205 749,205 730,168"/>
+      </g>
+      <g fill="#ffb347" opacity="0.85">
+        <rect x="66" y="255" width="6" height="6"/>
+        <rect x="206" y="235" width="6" height="6"/>
+        <rect x="348" y="220" width="6" height="6"/>
+        <rect x="478" y="245" width="6" height="6"/>
+        <rect x="616" y="255" width="6" height="6"/>
+        <rect x="726" y="240" width="6" height="6"/>
+      </g>
+      <rect x="0" y="300" width="800" height="150" fill="url(#water)"/>
+      <g opacity="0.35" fill="#1c2e38">
+        <polygon points="150,300 175,260 200,300"/>
+        <polygon points="430,300 460,255 490,300"/>
+      </g>
+      <g stroke="#dfe7ea" stroke-width="2" opacity="0.5" fill="none">
+        <path d="M0,335 Q100,325 200,335 T400,335 T600,335 T800,335"/>
+        <path d="M0,365 Q100,355 200,365 T400,365 T600,365 T800,365"/>
+      </g>
+    </svg>
+  </div>
 </section>
 
-
-
-
-<section id="portfolio">
-
-
-<h2 class="section-title">
-Featured <span>Builds</span>
-</h2>
-
-
-
-<div class="portfolio">
-
-
-
-<div class="card hidden">
-
-<img src="https://cdn.myportfolio.com/8d0ed7b220194a274c6235a5b0354492/332dff49-4309-484d-ad59-08d523fd2320_rw_1920.jpg?h=1e1076e62e8d400fc5fcbef722e5b7c6">
-
-<div class="card-info">
-<h3>Fantasy Kingdom</h3>
-<p>Large medieval castle project</p>
-</div>
-
-</div>
-
-
-
-<div class="card hidden">
-
-<img src="https://cdn.myportfolio.com/8d0ed7b220194a274c6235a5b0354492/332dff49-4309-484d-ad59-08d523fd2320_rw_1920.jpg?h=1e1076e62e8d400fc5fcbef722e5b7c6">
-
-<div class="card-info">
-<h3>Modern City</h3>
-<p>Detailed urban environment</p>
-</div>
-
-</div>
-
-
-
-<div class="card hidden">
-
-<img src="https://cdn.myportfolio.com/8d0ed7b220194a274c6235a5b0354492/332dff49-4309-484d-ad59-08d523fd2320_rw_1920.jpg?h=1e1076e62e8d400fc5fcbef722e5b7c6">
-
-<div class="card-info">
-<h3>Fantasy World</h3>
-<p>Custom adventure map</p>
-</div>
-
-</div>
-
-
-</div>
-
-
-</section>
-  <section id="about">
-
-<h2 class="section-title">
-About <span>Me</span>
-</h2>
-
-
-<div class="about">
-
-
-<div class="about-text hidden">
-
-<p>
-I'm a Minecraft builder focused on creating detailed,
-high-quality builds for servers, creators, and
-communities.
-
-<br><br>
-
-My goal is to create builds that don't just look good,
-but feel like real worlds with atmosphere, story, and
-personality.
-
-<br><br>
-
-Every project is carefully planned and built with
-attention to detail.
-
-</p>
-
-</div>
-
-
-
-<div class="stats hidden">
-
-
-<div class="stat">
-
-<h2>5+</h2>
-<p>Years Building</p>
-
-</div>
-
-
-<div class="stat">
-
-<h2>50+</h2>
-<p>Projects Completed</p>
-
-</div>
-
-
-<div class="stat">
-
-<h2>100%</h2>
-<p>Custom Builds</p>
-
-</div>
-
-
-<div class="stat">
-
-<h2>24/7</h2>
-<p>Communication</p>
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
+<!-- BUILDS -->
+<section id="builds">
+  <h2 class="section-title reveal">Featured <span>Builds</span></h2>
+  <div class="builds-grid">
+    <div class="build-card reveal">
+      <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <rect width="400" height="260" fill="#7fa6c2"/>
+        <polygon points="0,140 80,90 160,130 240,80 320,135 400,100 400,260 0,260" fill="#94a6ba"/>
+        <g fill="#25303d">
+          <rect x="60" y="130" width="16" height="45"/>
+          <polygon points="53,130 84,130 68,108"/>
+          <rect x="160" y="110" width="18" height="65"/>
+          <polygon points="152,110 186,110 169,82"/>
+          <rect x="260" y="135" width="16" height="40"/>
+          <polygon points="253,135 284,135 268,112"/>
+        </g>
+        <rect y="175" width="400" height="85" fill="#3c586b"/>
+      </svg>
+      <div class="build-label">
+        <h3>Fantasy Kingdom</h3>
+        <p>Large medieval castle project</p>
+      </div>
+    </div>
+    <div class="build-card reveal">
+      <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <rect width="400" height="260" fill="#6f8ea3"/>
+        <g fill="#232a33">
+          <rect x="40" y="90" width="30" height="120"/>
+          <rect x="90" y="60" width="24" height="150"/>
+          <rect x="140" y="110" width="30" height="100"/>
+          <rect x="190" y="40" width="26" height="170"/>
+          <rect x="240" y="95" width="28" height="115"/>
+          <rect x="290" y="70" width="24" height="140"/>
+          <rect x="330" y="120" width="28" height="90"/>
+        </g>
+        <g fill="#ffd27a" opacity="0.8">
+          <rect x="48" y="110" width="6" height="6"/>
+          <rect x="98" y="90" width="6" height="6"/>
+          <rect x="148" y="130" width="6" height="6"/>
+          <rect x="198" y="80" width="6" height="6"/>
+          <rect x="248" y="120" width="6" height="6"/>
+          <rect x="298" y="100" width="6" height="6"/>
+        </g>
+        <rect y="210" width="400" height="50" fill="#2f3945"/>
+      </svg>
+      <div class="build-label">
+        <h3>Modern City</h3>
+        <p>Detailed urban environment</p>
+      </div>
+    </div>
+    <div class="build-card reveal">
+      <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <rect width="400" height="260" fill="#b7c9d6"/>
+        <polygon points="0,150 60,100 130,140 200,90 280,145 340,110 400,150 400,260 0,260" fill="#8fa3b6"/>
+        <g fill="#2a3542">
+          <rect x="70" y="140" width="16" height="45"/>
+          <polygon points="63,140 94,140 78,118"/>
+          <rect x="180" y="120" width="18" height="60"/>
+          <polygon points="172,120 206,120 189,95"/>
+          <rect x="290" y="145" width="16" height="40"/>
+          <polygon points="283,145 314,145 298,122"/>
+        </g>
+        <rect y="185" width="400" height="75" fill="#4a6577"/>
+        <circle cx="330" cy="60" r="20" fill="#fff6dc" opacity="0.7"/>
+      </svg>
+      <div class="build-label">
+        <h3>Fantasy World</h3>
+        <p>Custom adventure map</p>
+      </div>
+    </div>
+  </div>
 </section>
 
+<!-- ABOUT -->
+<section id="about">
+  <h2 class="section-title reveal">About <span>Me</span></h2>
+  <div class="about">
+    <div class="about-copy reveal">
+      <p>I'm a Minecraft builder focused on creating detailed, high-quality builds for servers, creators, and communities.</p>
+      <p>My goal is to create builds that don't just look good, but feel like real worlds with atmosphere, story, and personality.</p>
+      <p>Every project is carefully planned and built with attention to detail.</p>
+    </div>
+    <div class="stat-grid reveal">
+      <div class="stat-card">
+        <div class="num">5+</div>
+        <div class="label">Years Building</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">50+</div>
+        <div class="label">Projects Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">100%</div>
+        <div class="label">Custom Builds</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">24/7</div>
+        <div class="label">Communication</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-
-
+<!-- SERVICES -->
 <section id="services">
+  <h2 class="section-title reveal">My <span>Services</span></h2>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <span class="service-icon">🏰</span>
+      <h3>Medieval Builds</h3>
+      <p>Castles, villages, kingdoms, and fantasy landscapes.</p>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">🏙️</span>
+      <h3>Modern Builds</h3>
+      <p>Cities, houses, skyscrapers, and realistic environments.</p>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">🌲</span>
+      <h3>Fantasy Worlds</h3>
+      <p>Magical locations, adventure maps, and unique worlds.</p>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">⚔️</span>
+      <h3>Server Projects</h3>
+      <p>Spawns, hubs, arenas, and multiplayer environments.</p>
+    </div>
+  </div>
 
-
-<h2 class="section-title">
-My <span>Services</span>
-</h2>
-
-
-
-<div class="services">
-
-
-
-<div class="service hidden">
-
-<div class="service-icon">
-🏰
-</div>
-
-<h3>Medieval Builds</h3>
-
-<p>
-Castles, villages, kingdoms, and fantasy landscapes.
-</p>
-
-</div>
-
-
-
-
-<div class="service hidden">
-
-<div class="service-icon">
-🌆
-</div>
-
-<h3>Modern Builds</h3>
-
-<p>
-Cities, houses, skyscrapers, and realistic environments.
-</p>
-
-</div>
-
-
-
-
-<div class="service hidden">
-
-<div class="service-icon">
-🌲
-</div>
-
-<h3>Fantasy Worlds</h3>
-
-<p>
-Magical locations, adventure maps, and unique worlds.
-</p>
-
-</div>
-
-
-
-
-<div class="service hidden">
-
-<div class="service-icon">
-⚔️
-</div>
-
-<h3>Server Projects</h3>
-
-<p>
-Spawns, hubs, arenas, and multiplayer environments.
-</p>
-
-</div>
-
-
-</div>
-
-
+  <h2 class="section-title reveal">Commission <span>Process (Paid Only)</span></h2>
+  <div class="process-grid">
+    <div class="process-card reveal">
+      <div class="process-num">01</div>
+      <h3>Contact</h3>
+      <p>Tell me your idea, style, requirements, and discuss payment. (PayPal, CashApp, or any other agreed payment)</p>
+    </div>
+    <div class="process-card reveal">
+      <div class="process-num">02</div>
+      <h3>Planning</h3>
+      <p>We discuss designs, references, and details. Once we're both happy with the details the client will give me 50% of the payment for the project.</p>
+    </div>
+    <div class="process-card reveal">
+      <div class="process-num">03</div>
+      <h3>Building</h3>
+      <p>I create your Minecraft project with updates as needed.</p>
+    </div>
+    <div class="process-card reveal">
+      <div class="process-num">04</div>
+      <h3>Delivery</h3>
+      <p>Once the client is happy with the build, they will send me the rest of the 50% of the payment we agreed upon. Then I will send all the necessary files. (.schem, world file.)</p>
+    </div>
+  </div>
 </section>
 
-
-
-
-
-<section>
-
-
-<h2 class="section-title">
-Commission <span>Process (Paid Only)</span>
-</h2>
-
-
-
-<div class="process">
-
-
-<div class="process-card hidden">
-
-<div class="process-number">
-01
+<!-- CTA -->
+<div class="cta-wrap" id="contact">
+  <div class="cta reveal">
+    <h2>Ready To Build Something?</h2>
+    <p>Have a project idea? Contact me and let's create something amazing.</p>
+    <div class="btn-row">
+      <a href="#" class="btn btn-white">Discord</a>
+      <a href="#builds" class="btn btn-white">Other Portfolio Builds</a>
+    </div>
+  </div>
 </div>
 
-<h3>Contact</h3>
-
-<p>
-Tell me your idea, style, requirements, and discuss payment. (Paypal, cashapp, or any other agreed payment)
-</p>
-
-</div>
-
-
-
-
-<div class="process-card hidden">
-
-<div class="process-number">
-02
-</div>
-
-<h3>Planning</h3>
-
-<p>
-We discuss designs, references, and details. Once we're both happy with the details the client will give me 50% of the payment for the project.
-</p>
-
-</div>
-
-
-
-
-
-<div class="process-card hidden">
-
-<div class="process-number">
-03
-</div>
-
-<h3>Building</h3>
-
-<p>
-I create your Minecraft project with updates as needed.
-</p>
-
-</div>
-
-
-
-
-
-<div class="process-card hidden">
-
-<div class="process-number">
-04
-</div>
-
-<h3>Delivery</h3>
-
-<p>
-Once the client is happy with the build, they will send me the rest of the 50% of the payment we agreed upon. Then I will send all the necessary files. (.schem, world file.)
-</p>
-
-</div>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-<section id="contact">
-
-
-<div class="contact-box hidden">
-
-
-<h2>
-Ready To Build Something?
-</h2>
-
-
-<p>
-Have a project idea? Contact me and let's create
-something amazing.
-</p>
-
-
-
-<div class="contact-links">
-
-
-<a class="contact-link" href="#">
-Discord
-</a>
-  
-  
-
-<a class="contact-link" href="#">
-Other Portfolio Builds
-</a>
-
-
-</div>
-
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-<footer>
-
-<p>
-© 2026 BlockForgeBuilds. Minecraft portfolio.
-</p>
-
-</footer>
-  
-
+<footer>© 2026 BlockForgeBuilds. Minecraft portfolio.</footer>
+
+<script>
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navList = document.getElementById('navList');
+  navToggle.addEventListener('click', () => {
+    navList.classList.toggle('open');
+  });
+  navList.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => navList.classList.remove('open'));
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+</script>
 
 </body>
 </html>
