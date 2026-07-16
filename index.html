@@ -22,11 +22,27 @@
   html{scroll-behavior:smooth;}
   body{
     font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
-    background:var(--bg-0);
     color:var(--text-0);
     overflow-x:hidden;
+    background:
+      radial-gradient(1600px 1000px at 18% -15%, rgba(20,150,175,0.55), transparent 62%),
+      radial-gradient(1500px 1000px at 100% 12%, rgba(110,70,210,0.5), transparent 62%),
+      radial-gradient(1300px 900px at 25% 105%, rgba(20,140,160,0.32), transparent 60%),
+      linear-gradient(160deg, #081722 0%, #0b1428 40%, #121232 70%, #170f2c 100%);
+    background-attachment:fixed;
+    background-repeat:no-repeat;
   }
   a{color:inherit;text-decoration:none;}
+
+  /* ---------- Reveal animation (kept early in the cascade so later,
+     more-specific component :hover rules below always win over the
+     resting .reveal.in transform, instead of fighting it) ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .reveal.in{opacity:1;transform:translateY(0);}
 
   /* ---------- Nav ---------- */
   header{
@@ -72,9 +88,6 @@
     padding:100px 60px 120px;
     max-width:1500px;
     margin:0 auto;
-    background:
-      radial-gradient(700px 500px at 8% 15%, rgba(20,90,110,0.35), transparent 60%),
-      radial-gradient(900px 600px at 90% -10%, rgba(50,40,110,0.28), transparent 60%);
   }
   .hero-copy h1{
     font-size:56px;
@@ -262,14 +275,6 @@
     color:var(--text-2);
     font-size:13.5px;
   }
-
-  /* ---------- Reveal animation ---------- */
-  .reveal{
-    opacity:0;
-    transform:translateY(24px);
-    transition:opacity .7s ease, transform .7s ease;
-  }
-  .reveal.in{opacity:1;transform:translateY(0);}
 
   /* ---------- Responsive ---------- */
   @media (max-width:980px){
@@ -551,7 +556,7 @@
     <div class="process-card reveal">
       <div class="process-num">04</div>
       <h3>Delivery</h3>
-      <p>Once the client is happy with the build, they will send me the rest of the payment. Then I will send all the necessary files. (.schem, world file.)</p>
+      <p>Once the client is happy with the build, they will send me the rest of the 50% of the payment we agreed upon. Then I will send all the necessary files. (.schem, world file.)</p>
     </div>
   </div>
 </section>
@@ -562,7 +567,7 @@
     <h2>Ready To Build Something?</h2>
     <p>Have a project idea? Contact me and let's create something amazing.</p>
     <div class="btn-row">
-      <a href="https://discord.gg/dmBeH5rnaa" class="btn btn-white">Discord</a>
+      <a href="#" class="btn btn-white">Discord</a>
       <a href="#builds" class="btn btn-white">Other Portfolio Builds</a>
     </div>
   </div>
