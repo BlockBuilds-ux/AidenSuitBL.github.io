@@ -581,17 +581,46 @@
     a.addEventListener('click', () => navList.classList.remove('open'));
   });
 
-  // Scroll reveal
+  // Scroll reveal (robust: works even if IntersectionObserver
+  // is slow to fire on first paint, and never leaves content stuck hidden)
   const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        entry.target.classList.add('in');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  revealEls.forEach(el => io.observe(el));
+
+  function showEl(el){
+    el.classList.add('in');
+  }
+
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          showEl(entry.target);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -5% 0px' });
+
+    revealEls.forEach(el => io.observe(el));
+
+    // Safety net: some environments (embedded previews, slow layout)
+    // can delay the observer's first callback. Manually check on load
+    // and shortly after so nothing stays invisible.
+    function checkVisible(){
+      revealEls.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if(rect.top < window.innerHeight && rect.bottom > 0){
+          showEl(el);
+        }
+      });
+    }
+    window.addEventListener('load', checkVisible);
+    setTimeout(checkVisible, 100);
+    setTimeout(checkVisible, 500);
+  } else {
+    revealEls.forEach(showEl);
+  }
+
+  // Absolute fallback: guarantee everything is visible no matter what.
+  setTimeout(() => revealEls.forEach(showEl), 1500);
 </script>
 
 </body>
