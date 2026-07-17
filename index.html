@@ -34,9 +34,6 @@
   }
   a{color:inherit;text-decoration:none;}
 
-  /* ---------- Reveal animation (kept early in the cascade so later,
-     more-specific component :hover rules below always win over the
-     resting .reveal.in transform, instead of fighting it) ---------- */
   .reveal{
     opacity:0;
     transform:translateY(24px);
@@ -44,7 +41,6 @@
   }
   .reveal.in{opacity:1;transform:translateY(0);}
 
-  /* ---------- Nav ---------- */
   header{
     display:flex;
     align-items:center;
@@ -141,8 +137,43 @@
     overflow:hidden;
     aspect-ratio:16/8.4;
     box-shadow:0 30px 80px rgba(0,0,0,0.55);
+    background:var(--card);
+    border:1px solid var(--card-border);
   }
-  .scene{width:100%;height:100%;display:block;}
+  /* Any element with class "scene" or "build-photo" is an image slot.
+     Swap the src on the <img> tag to point at your own screenshot file
+     (e.g. images/hero.jpg) once you have one ready. */
+  .scene, .build-photo{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    object-position:center;
+  }
+  .img-placeholder{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 14px, rgba(255,255,255,0.06) 14px 28px);
+    color:var(--text-2);
+    font-size:13px;
+    font-weight:600;
+    text-align:center;
+    padding:20px;
+  }
+  .img-placeholder .icon{font-size:28px;opacity:0.6;}
+  .img-placeholder code{
+    font-size:11.5px;
+    background:rgba(255,255,255,0.06);
+    padding:3px 8px;
+    border-radius:6px;
+    color:var(--cyan);
+  }
 
   /* ---------- Sections generic ---------- */
   section{padding:100px 60px;max-width:1500px;margin:0 auto;}
@@ -154,6 +185,20 @@
     margin-bottom:56px;
   }
   .section-title span{color:var(--cyan);}
+
+  .builds-hint{
+    text-align:center;
+    color:var(--cyan);
+    font-size:15px;
+    font-weight:700;
+    margin-top:-36px;
+    margin-bottom:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .builds-hint .icon{font-size:17px;}
 
   /* ---------- Builds ---------- */
   .builds-grid{
@@ -171,15 +216,32 @@
     transition:transform .35s ease, box-shadow .35s ease;
   }
   .build-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.5);}
-  .build-card svg{width:100%;height:100%;display:block;}
   .build-label{
     position:absolute;
     left:0;right:0;bottom:0;
     padding:20px 22px 18px;
     background:linear-gradient(to top, rgba(4,8,16,0.92), transparent);
+    pointer-events:none;
   }
   .build-label h3{font-size:19px;font-weight:800;margin-bottom:4px;}
   .build-label p{font-size:13.5px;color:var(--text-1);}
+  .build-badge{
+    position:absolute;
+    top:14px;
+    right:14px;
+    background:rgba(4,7,14,0.7);
+    border:1px solid rgba(255,255,255,0.2);
+    color:var(--text-0);
+    font-size:12px;
+    font-weight:700;
+    padding:7px 12px;
+    border-radius:100px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    backdrop-filter:blur(4px);
+    pointer-events:none;
+  }
 
   /* ---------- About ---------- */
   .about{
@@ -276,6 +338,110 @@
     font-size:13.5px;
   }
 
+  /* ---------- Lightbox gallery ---------- */
+  .lightbox{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background:rgba(4,7,14,0.92);
+    backdrop-filter:blur(6px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .25s ease;
+    padding:40px;
+  }
+  .lightbox.open{opacity:1;visibility:visible;}
+  .lightbox-close{
+    position:absolute;
+    top:24px;
+    right:32px;
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.06);
+    color:var(--text-0);
+    font-size:22px;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background .2s ease, transform .2s ease, border-color .2s ease;
+  }
+  .lightbox-close:hover{background:rgba(255,255,255,0.14);border-color:var(--cyan);transform:rotate(90deg);}
+  .lightbox-inner{
+    width:100%;
+    max-width:1100px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+  .lightbox-stage{
+    position:relative;
+    width:100%;
+    aspect-ratio:16/9;
+    border-radius:18px;
+    overflow:hidden;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    box-shadow:0 40px 100px rgba(0,0,0,0.6);
+  }
+  .lightbox-stage img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .lightbox-nav{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,0.25);
+    background:rgba(4,7,14,0.55);
+    color:var(--text-0);
+    font-size:22px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background .2s ease, border-color .2s ease;
+  }
+  .lightbox-nav:hover{background:rgba(255,255,255,0.14);border-color:var(--cyan);}
+  .lightbox-prev{left:16px;}
+  .lightbox-next{right:16px;}
+  .lightbox-caption{
+    text-align:center;
+  }
+  .lightbox-caption h3{font-size:20px;font-weight:800;margin-bottom:4px;}
+  .lightbox-caption p{font-size:13.5px;color:var(--text-1);}
+  .lightbox-thumbs{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .lightbox-thumb{
+    width:74px;
+    height:50px;
+    border-radius:8px;
+    overflow:hidden;
+    border:2px solid transparent;
+    cursor:pointer;
+    opacity:0.6;
+    transition:opacity .2s ease, border-color .2s ease;
+    background:var(--card);
+  }
+  .lightbox-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .lightbox-thumb.active{opacity:1;border-color:var(--cyan);}
+  .lightbox-thumb:hover{opacity:1;}
+
   /* ---------- Responsive ---------- */
   @media (max-width:980px){
     header{padding:22px 26px;}
@@ -295,9 +461,12 @@
     .hero-copy h1{font-size:40px;}
     section{padding:70px 26px;}
     .builds-grid{grid-template-columns:1fr;}
+    .builds-hint{margin-top:-24px;font-size:13.5px;}
     .about{grid-template-columns:1fr;}
     .services-grid{grid-template-columns:1fr 1fr;}
     .process-grid{grid-template-columns:1fr 1fr;}
+    .lightbox{padding:20px;}
+    .lightbox-nav{width:42px;height:42px;font-size:18px;}
   }
   @media (max-width:560px){
     .services-grid{grid-template-columns:1fr;}
@@ -310,7 +479,6 @@
     *{transition:none !important; scroll-behavior:auto !important;}
   }
 
-  /* focus visibility */
   a:focus-visible, button:focus-visible{
     outline:2px solid var(--cyan);
     outline-offset:3px;
@@ -343,135 +511,62 @@
     </div>
   </div>
   <div class="hero-art">
-    <svg class="scene" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#9fc9e8"/>
-          <stop offset="55%" stop-color="#dce8ea"/>
-          <stop offset="100%" stop-color="#f3ede0"/>
-        </linearGradient>
-        <linearGradient id="mtn" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#c7d3e0"/>
-          <stop offset="100%" stop-color="#8ea0b8"/>
-        </linearGradient>
-        <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#5f7f92"/>
-          <stop offset="100%" stop-color="#2f4a5c"/>
-        </linearGradient>
-      </defs>
-      <rect width="800" height="450" fill="url(#sky)"/>
-      <polygon points="0,230 90,150 160,210 250,120 340,220 430,140 520,215 610,160 700,225 800,180 800,300 0,300" fill="url(#mtn)" opacity="0.85"/>
-      <polygon points="0,260 120,190 230,240 350,170 470,245 590,195 700,250 800,210 800,320 0,320" fill="#a9b7c9" opacity="0.6"/>
-      <g fill="#2b2f3a">
-        <rect x="60" y="230" width="18" height="60"/>
-        <polygon points="52,230 87,230 69,205"/>
-        <rect x="120" y="245" width="26" height="55"/>
-        <polygon points="115,245 151,245 133,215"/>
-        <rect x="200" y="200" width="20" height="100"/>
-        <polygon points="192,200 228,200 210,165"/>
-        <rect x="260" y="235" width="30" height="65"/>
-        <polygon points="252,235 296,235 274,200"/>
-        <rect x="340" y="180" width="22" height="120"/>
-        <polygon points="330,180 372,180 351,140"/>
-        <rect x="400" y="240" width="24" height="60"/>
-        <polygon points="391,240 431,240 411,205"/>
-        <rect x="470" y="210" width="20" height="90"/>
-        <polygon points="462,210 498,210 480,178"/>
-        <rect x="540" y="250" width="28" height="55"/>
-        <polygon points="533,250 575,250 554,218"/>
-        <rect x="610" y="220" width="20" height="85"/>
-        <polygon points="602,220 638,220 620,188"/>
-        <rect x="670" y="245" width="26" height="60"/>
-        <polygon points="663,245 703,245 683,212"/>
-        <rect x="720" y="205" width="22" height="100"/>
-        <polygon points="712,205 749,205 730,168"/>
-      </g>
-      <g fill="#ffb347" opacity="0.85">
-        <rect x="66" y="255" width="6" height="6"/>
-        <rect x="206" y="235" width="6" height="6"/>
-        <rect x="348" y="220" width="6" height="6"/>
-        <rect x="478" y="245" width="6" height="6"/>
-        <rect x="616" y="255" width="6" height="6"/>
-        <rect x="726" y="240" width="6" height="6"/>
-      </g>
-      <rect x="0" y="300" width="800" height="150" fill="url(#water)"/>
-      <g opacity="0.35" fill="#1c2e38">
-        <polygon points="150,300 175,260 200,300"/>
-        <polygon points="430,300 460,255 490,300"/>
-      </g>
-      <g stroke="#dfe7ea" stroke-width="2" opacity="0.5" fill="none">
-        <path d="M0,335 Q100,325 200,335 T400,335 T600,335 T800,335"/>
-        <path d="M0,365 Q100,355 200,365 T400,365 T600,365 T800,365"/>
-      </g>
-    </svg>
+    <!-- REPLACE src BELOW with your real hero screenshot, e.g. images/hero.jpg -->
+    <img class="scene" src="" alt="Featured Minecraft build screenshot"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="img-placeholder" style="display:none;position:absolute;inset:0;">
+      <span class="icon">🖼️</span>
+      <span>Hero image goes here</span>
+      <code>images/hero.jpg</code>
+    </div>
   </div>
 </section>
 
 <!-- BUILDS -->
 <section id="builds">
   <h2 class="section-title reveal">Featured <span>Builds</span></h2>
+  <p class="builds-hint reveal"><span class="icon">🔍</span>Click any image to see more photos of that build</p>
   <div class="builds-grid">
-    <div class="build-card reveal">
-      <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <rect width="400" height="260" fill="#7fa6c2"/>
-        <polygon points="0,140 80,90 160,130 240,80 320,135 400,100 400,260 0,260" fill="#94a6ba"/>
-        <g fill="#25303d">
-          <rect x="60" y="130" width="16" height="45"/>
-          <polygon points="53,130 84,130 68,108"/>
-          <rect x="160" y="110" width="18" height="65"/>
-          <polygon points="152,110 186,110 169,82"/>
-          <rect x="260" y="135" width="16" height="40"/>
-          <polygon points="253,135 284,135 268,112"/>
-        </g>
-        <rect y="175" width="400" height="85" fill="#3c586b"/>
-      </svg>
+    <div class="build-card reveal" data-gallery="0">
+      <!-- REPLACE src with e.g. images/build-1.jpg -->
+      <img class="build-photo" src="https://i.ibb.co/cKng2G01/Screenshot-2026-07-17-145043.png" alt="Fantasy Kingdom Minecraft build"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="img-placeholder" style="display:none;position:absolute;inset:0;">
+        <span class="icon">🏰</span>
+        <span>Cartoon Lobby</span>
+        <code>images/build-1.jpg</code>
+      </div>
+      <div class="build-badge">🔍 Click to view more</div>
       <div class="build-label">
-        <h3>Fantasy Kingdom</h3>
-        <p>Large medieval castle project</p>
+        <h3>Cartoon Kingdom Lobby</h3>
+        <p>Click here to expand image</p>
       </div>
     </div>
-    <div class="build-card reveal">
-      <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <rect width="400" height="260" fill="#6f8ea3"/>
-        <g fill="#232a33">
-          <rect x="40" y="90" width="30" height="120"/>
-          <rect x="90" y="60" width="24" height="150"/>
-          <rect x="140" y="110" width="30" height="100"/>
-          <rect x="190" y="40" width="26" height="170"/>
-          <rect x="240" y="95" width="28" height="115"/>
-          <rect x="290" y="70" width="24" height="140"/>
-          <rect x="330" y="120" width="28" height="90"/>
-        </g>
-        <g fill="#ffd27a" opacity="0.8">
-          <rect x="48" y="110" width="6" height="6"/>
-          <rect x="98" y="90" width="6" height="6"/>
-          <rect x="148" y="130" width="6" height="6"/>
-          <rect x="198" y="80" width="6" height="6"/>
-          <rect x="248" y="120" width="6" height="6"/>
-          <rect x="298" y="100" width="6" height="6"/>
-        </g>
-        <rect y="210" width="400" height="50" fill="#2f3945"/>
-      </svg>
+    <div class="build-card reveal" data-gallery="1">
+      <!-- REPLACE src with e.g. images/build-2.jpg -->
+      <img class="build-photo" src="images/build-2.jpg" alt="Modern City Minecraft build"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="img-placeholder" style="display:none;position:absolute;inset:0;">
+        <span class="icon">🏙️</span>
+        <span>Modern City photo</span>
+        <code>images/build-2.jpg</code>
+      </div>
+      <div class="build-badge">🔍 Click to view more</div>
       <div class="build-label">
         <h3>Modern City</h3>
         <p>Detailed urban environment</p>
       </div>
     </div>
-    <div class="build-card reveal">
-      <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <rect width="400" height="260" fill="#b7c9d6"/>
-        <polygon points="0,150 60,100 130,140 200,90 280,145 340,110 400,150 400,260 0,260" fill="#8fa3b6"/>
-        <g fill="#2a3542">
-          <rect x="70" y="140" width="16" height="45"/>
-          <polygon points="63,140 94,140 78,118"/>
-          <rect x="180" y="120" width="18" height="60"/>
-          <polygon points="172,120 206,120 189,95"/>
-          <rect x="290" y="145" width="16" height="40"/>
-          <polygon points="283,145 314,145 298,122"/>
-        </g>
-        <rect y="185" width="400" height="75" fill="#4a6577"/>
-        <circle cx="330" cy="60" r="20" fill="#fff6dc" opacity="0.7"/>
-      </svg>
+    <div class="build-card reveal" data-gallery="2">
+      <!-- REPLACE src with e.g. images/build-3.jpg -->
+      <img class="build-photo" src="images/build-3.jpg" alt="Fantasy World Minecraft build"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="img-placeholder" style="display:none;position:absolute;inset:0;">
+        <span class="icon">🌄</span>
+        <span>Fantasy World photo</span>
+        <code>images/build-3.jpg</code>
+      </div>
+      <div class="build-badge">🔍 Click to view more</div>
       <div class="build-label">
         <h3>Fantasy World</h3>
         <p>Custom adventure map</p>
@@ -575,6 +670,23 @@
 
 <footer>© 2026 BlockForgeBuilds. Minecraft portfolio.</footer>
 
+<!-- LIGHTBOX GALLERY -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close gallery">✕</button>
+  <div class="lightbox-inner">
+    <div class="lightbox-stage">
+      <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous image">‹</button>
+      <img id="lightboxImg" src="" alt="">
+      <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next image">›</button>
+    </div>
+    <div class="lightbox-caption">
+      <h3 id="lightboxTitle"></h3>
+      <p id="lightboxDesc"></p>
+    </div>
+    <div class="lightbox-thumbs" id="lightboxThumbs"></div>
+  </div>
+</div>
+
 <script>
   // Mobile nav toggle
   const navToggle = document.getElementById('navToggle');
@@ -586,35 +698,20 @@
     a.addEventListener('click', () => navList.classList.remove('open'));
   });
 
-  // Scroll reveal (robust: works even if IntersectionObserver
-  // is slow to fire on first paint, and never leaves content stuck hidden)
+  // Scroll reveal
   const revealEls = document.querySelectorAll('.reveal');
-
-  function showEl(el){
-    el.classList.add('in');
-  }
-
+  function showEl(el){ el.classList.add('in'); }
   if ('IntersectionObserver' in window){
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if(entry.isIntersecting){
-          showEl(entry.target);
-          io.unobserve(entry.target);
-        }
+        if(entry.isIntersecting){ showEl(entry.target); io.unobserve(entry.target); }
       });
     }, { threshold: 0, rootMargin: '0px 0px -5% 0px' });
-
     revealEls.forEach(el => io.observe(el));
-
-    // Safety net: some environments (embedded previews, slow layout)
-    // can delay the observer's first callback. Manually check on load
-    // and shortly after so nothing stays invisible.
     function checkVisible(){
       revealEls.forEach(el => {
         const rect = el.getBoundingClientRect();
-        if(rect.top < window.innerHeight && rect.bottom > 0){
-          showEl(el);
-        }
+        if(rect.top < window.innerHeight && rect.bottom > 0){ showEl(el); }
       });
     }
     window.addEventListener('load', checkVisible);
@@ -623,9 +720,104 @@
   } else {
     revealEls.forEach(showEl);
   }
-
-  // Absolute fallback: guarantee everything is visible no matter what.
   setTimeout(() => revealEls.forEach(showEl), 1500);
+
+  // ---------- Lightbox gallery ----------
+  // Each entry is one build's photo set. Add more src paths per build
+  // (e.g. more screenshots) and they'll show up as extra thumbnails.
+  const galleries = [
+    {
+      title: "",
+      desc: "",
+      images: ["https://i.ibb.co/cKng2G01/Screenshot-2026-07-17-145043.png", "https://i.ibb.co/9Qf4mg8/Screenshot-2026-07-17-145049.png", "https://i.ibb.co/tTf3qDzN/Screenshot-2026-07-17-145101.png"]
+    },
+    {
+      title: "",
+      desc: "",
+      images: ["images/build-2.jpg", "images/build-2-2.jpg", "images/build-2-3.jpg"]
+    },
+    {
+      title: "",
+      desc: "",
+      images: ["images/build-3.jpg", "images/build-3-2.jpg", "images/build-3-3.jpg"]
+    }
+  ];
+
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxTitle = document.getElementById('lightboxTitle');
+  const lightboxDesc = document.getElementById('lightboxDesc');
+  const lightboxThumbs = document.getElementById('lightboxThumbs');
+  const lightboxClose = document.getElementById('lightboxClose');
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
+
+  let currentGallery = 0;
+  let currentIndex = 0;
+
+  function renderLightbox(){
+    const g = galleries[currentGallery];
+    lightboxImg.src = g.images[currentIndex];
+    lightboxImg.alt = g.title + ' photo ' + (currentIndex + 1);
+    lightboxTitle.textContent = g.title;
+    lightboxDesc.textContent = g.desc;
+
+    lightboxThumbs.innerHTML = '';
+    g.images.forEach((src, i) => {
+      const thumb = document.createElement('div');
+      thumb.className = 'lightbox-thumb' + (i === currentIndex ? ' active' : '');
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = g.title + ' thumbnail ' + (i + 1);
+      thumb.appendChild(img);
+      thumb.addEventListener('click', () => {
+        currentIndex = i;
+        renderLightbox();
+      });
+      lightboxThumbs.appendChild(thumb);
+    });
+  }
+
+  function openLightbox(galleryIndex){
+    currentGallery = galleryIndex;
+    currentIndex = 0;
+    renderLightbox();
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.build-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = parseInt(card.getAttribute('data-gallery'), 10);
+      openLightbox(idx);
+    });
+  });
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+  lightboxPrev.addEventListener('click', () => {
+    const g = galleries[currentGallery];
+    currentIndex = (currentIndex - 1 + g.images.length) % g.images.length;
+    renderLightbox();
+  });
+  lightboxNext.addEventListener('click', () => {
+    const g = galleries[currentGallery];
+    currentIndex = (currentIndex + 1) % g.images.length;
+    renderLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') lightboxPrev.click();
+    if (e.key === 'ArrowRight') lightboxNext.click();
+  });
 </script>
 
 </body>
