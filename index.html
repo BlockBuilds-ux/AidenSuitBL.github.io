@@ -1,833 +1,936 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" href="https://i.ibb.co/35125J4L/Logo.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BlockForgeBuilds — Custom Minecraft Maps</title>
-
+<title>The Masonry — Commissioned Minecraft Builds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-0:#070b14;
-    --bg-1:#0a1420;
-    --bg-2:#0d1830;
-    --cyan:#22d3ee;
-    --cyan-soft:rgba(34,211,238,0.12);
-    --text-0:#f5f7fa;
-    --text-1:#b9c2d0;
-    --text-2:#8792a3;
-    --card:#111a2c;
-    --card-border:rgba(255,255,255,0.06);
-    --radius:20px;
+    --stone-950:#14161a;
+    --stone-900:#191c21;
+    --stone-800:#23262c;
+    --stone-700:#31353d;
+    --stone-600:#454a54;
+    --stone-500:#6b7180;
+    --parchment:#eee6d3;
+    --parchment-dim:#ded4bb;
+    --ink:#211c14;
+    --amber:#e8a33d;
+    --amber-glow:#ffcf7a;
+    --moss:#7fa25a;
+    --lapis:#5c8fc4;
+    --diamond:#6fd6cf;
+    --iron:#c3c6cd;
+    --gold:#e8c14d;
+    --redstone:#c65a4e;
+
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+    --font-pixel:'Press Start 2P', monospace;
+
+    --radius:3px;
+    --hotbar-h:64px;
   }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-padding-top:calc(var(--hotbar-h) + 24px);}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
   body{
-    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
-    color:var(--text-0);
-    overflow-x:hidden;
-    background:
-      radial-gradient(1600px 1000px at 18% -15%, rgba(20,150,175,0.55), transparent 62%),
-      radial-gradient(1500px 1000px at 100% 12%, rgba(110,70,210,0.5), transparent 62%),
-      radial-gradient(1300px 900px at 25% 105%, rgba(20,140,160,0.32), transparent 60%),
-      linear-gradient(160deg, #081722 0%, #0b1428 40%, #121232 70%, #170f2c 100%);
-    background-attachment:fixed;
-    background-repeat:no-repeat;
+    margin:0;
+    background:var(--stone-950);
+    color:var(--parchment);
+    font-family:var(--font-body);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
   }
-  a{color:inherit;text-decoration:none;}
 
-  .reveal{
-    opacity:0;
-    transform:translateY(24px);
-    transition:opacity .7s ease, transform .7s ease;
-  }
-  .reveal.in{opacity:1;transform:translateY(0);}
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+  button{font-family:inherit;}
 
-  header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:28px 60px;
-    position:sticky;
-    top:0;
-    z-index:100;
-    background:rgba(7,11,20,0.75);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid rgba(255,255,255,0.04);
-  }
-  .logo{
-    font-size:22px;
-    font-weight:800;
-    letter-spacing:-0.5px;
-  }
-  .logo span{color:var(--cyan);}
-  nav ul{
-    display:flex;
-    list-style:none;
-    gap:44px;
-  }
-  nav a{
-    font-size:15px;
-    font-weight:600;
-    color:var(--text-0);
-    opacity:0.9;
-    transition:opacity .2s, color .2s;
-    position:relative;
-  }
-  nav a:hover{color:var(--cyan);opacity:1;}
-  .nav-toggle{display:none;background:none;border:none;color:var(--text-0);font-size:26px;cursor:pointer;}
-
-  /* ---------- Hero ---------- */
-  .hero{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    align-items:center;
-    gap:40px;
-    padding:100px 60px 120px;
-    max-width:1500px;
+  .wrap{
+    max-width:1160px;
     margin:0 auto;
+    padding:0 28px;
   }
-  .hero-copy h1{
-    font-size:56px;
-    line-height:1.08;
-    font-weight:800;
-    letter-spacing:-1.5px;
-    margin-bottom:24px;
-  }
-  .hero-copy h1 .accent{color:var(--cyan);}
-  .hero-copy p{
-    color:var(--text-1);
-    font-size:18px;
-    line-height:1.6;
-    max-width:480px;
-    margin-bottom:36px;
-  }
-  .btn-row{display:flex;gap:16px;}
-  .btn{
-    padding:16px 30px;
-    border-radius:100px;
-    font-weight:700;
-    font-size:15px;
-    cursor:pointer;
-    border:1px solid transparent;
-    transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+
+  .eyebrow{
+    font-family:var(--font-pixel);
+    font-size:9px;
+    letter-spacing:0.12em;
+    color:var(--amber);
+    text-transform:uppercase;
     display:inline-flex;
     align-items:center;
-  }
-  .btn:hover{transform:translateY(-2px);}
-  .btn-primary{
-    background:var(--cyan);
-    color:#04202a;
-    box-shadow:0 0 0 0 rgba(34,211,238,0.4);
-  }
-  .btn-primary:hover{box-shadow:0 8px 24px rgba(34,211,238,0.35);}
-  .btn-ghost{
-    background:transparent;
-    color:var(--text-0);
-    border:1px solid rgba(255,255,255,0.25);
-  }
-  .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
-  .btn-white{
-    background:#fff;
-    color:#0a1420;
-  }
-  .btn-white:hover{box-shadow:0 8px 24px rgba(255,255,255,0.25);}
-
-  .hero-art{
-    position:relative;
-    border-radius:24px;
-    overflow:hidden;
-    aspect-ratio:16/8.4;
-    box-shadow:0 30px 80px rgba(0,0,0,0.55);
-    background:var(--card);
-    border:1px solid var(--card-border);
-  }
-  /* Any element with class "scene" or "build-photo" is an image slot.
-     Swap the src on the <img> tag to point at your own screenshot file
-     (e.g. images/hero.jpg) once you have one ready. */
-  .scene, .build-photo{
-    width:100%;
-    height:100%;
-    display:block;
-    object-fit:cover;
-    object-position:center;
-  }
-  .img-placeholder{
-    width:100%;
-    height:100%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
     gap:8px;
-    background:
-      repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 14px, rgba(255,255,255,0.06) 14px 28px);
-    color:var(--text-2);
-    font-size:13px;
-    font-weight:600;
-    text-align:center;
-    padding:20px;
+    margin-bottom:18px;
   }
-  .img-placeholder .icon{font-size:28px;opacity:0.6;}
-  .img-placeholder code{
-    font-size:11.5px;
-    background:rgba(255,255,255,0.06);
-    padding:3px 8px;
+  .eyebrow::before{
+    content:"";
+    width:7px; height:7px;
+    background:var(--amber);
+    box-shadow:0 0 0 3px rgba(232,163,61,0.18);
+  }
+
+  h1,h2,h3,h4{
+    font-family:var(--font-display);
+    font-weight:700;
+    margin:0 0 .5em;
+    letter-spacing:-0.01em;
+  }
+
+  .section{padding:96px 0;}
+  .section-head{max-width:620px; margin-bottom:56px;}
+  .section-head p{color:var(--parchment-dim); font-size:1.05rem;}
+
+  /* ================= HOTBAR NAV ================= */
+  .hotbar-shell{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:center;
+    padding-top:12px;
+    pointer-events:none;
+  }
+  .hotbar{
+    pointer-events:auto;
+    display:flex;
+    gap:4px;
+    background:linear-gradient(180deg, #2a2d33, #1c1e23);
+    border:3px solid var(--stone-950);
+    box-shadow:
+      inset 0 0 0 2px #3d424c,
+      0 8px 24px rgba(0,0,0,0.5);
+    padding:5px;
     border-radius:6px;
-    color:var(--cyan);
   }
-
-  /* ---------- Sections generic ---------- */
-  section{padding:100px 60px;max-width:1500px;margin:0 auto;}
-  .section-title{
-    text-align:center;
-    font-size:38px;
-    font-weight:800;
-    letter-spacing:-1px;
-    margin-bottom:56px;
-  }
-  .section-title span{color:var(--cyan);}
-
-  .builds-hint{
-    text-align:center;
-    color:var(--cyan);
-    font-size:15px;
-    font-weight:700;
-    margin-top:-36px;
-    margin-bottom:40px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-  }
-  .builds-hint .icon{font-size:17px;}
-
-  /* ---------- Builds ---------- */
-  .builds-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:26px;
-  }
-  .build-card{
+  .hotbar-slot{
     position:relative;
-    border-radius:var(--radius);
-    overflow:hidden;
-    aspect-ratio:16/10;
-    border:1px solid var(--card-border);
+    width:52px; height:52px;
+    background:linear-gradient(180deg, #3a3f47, #262a30);
+    border:2px solid #14161a;
+    box-shadow:inset 0 0 0 1px #4a505a;
+    display:flex; align-items:center; justify-content:center;
     cursor:pointer;
-    transition:transform .35s ease, box-shadow .35s ease;
+    border-radius:3px;
+    text-decoration:none;
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
   }
-  .build-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.5);}
-  .build-label{
-    position:absolute;
-    left:0;right:0;bottom:0;
-    padding:20px 22px 18px;
-    background:linear-gradient(to top, rgba(4,8,16,0.92), transparent);
+  .hotbar-slot .ic{font-size:20px; line-height:1;}
+  .hotbar-slot .num{
+    position:absolute; top:2px; left:3px;
+    font-family:var(--font-pixel);
+    font-size:7px;
+    color:#8b91a0;
+  }
+  .hotbar-slot .tip{
+    position:absolute; top:calc(100% + 10px);
+    left:50%; transform:translateX(-50%);
+    background:#0d0e10;
+    border:2px solid var(--stone-950);
+    box-shadow:inset 0 0 0 1px #454a54;
+    color:var(--parchment);
+    font-family:var(--font-pixel);
+    font-size:8px;
+    white-space:nowrap;
+    padding:6px 8px;
+    opacity:0; visibility:hidden;
+    transition:opacity .12s ease;
     pointer-events:none;
   }
-  .build-label h3{font-size:19px;font-weight:800;margin-bottom:4px;}
-  .build-label p{font-size:13.5px;color:var(--text-1);}
-  .build-badge{
-    position:absolute;
-    top:14px;
-    right:14px;
-    background:rgba(4,7,14,0.7);
-    border:1px solid rgba(255,255,255,0.2);
-    color:var(--text-0);
-    font-size:12px;
-    font-weight:700;
-    padding:7px 12px;
-    border-radius:100px;
-    display:flex;
-    align-items:center;
-    gap:6px;
-    backdrop-filter:blur(4px);
-    pointer-events:none;
+  .hotbar-slot:hover .tip{opacity:1; visibility:visible;}
+  .hotbar-slot:hover{transform:translateY(-2px); background:linear-gradient(180deg,#454b55,#2c3038);}
+  .hotbar-slot.active{
+    box-shadow:inset 0 0 0 2px var(--amber-glow), 0 0 10px rgba(232,163,61,0.5);
+  }
+  .hotbar-slot.brand{background:linear-gradient(180deg,#4a3420,#2a1e14); box-shadow:inset 0 0 0 1px #6b4e2e;}
+  .hotbar-slot.cta{background:linear-gradient(180deg, var(--amber), #b97a24); box-shadow:inset 0 0 0 1px #7a531a;}
+  .hotbar-slot.cta .ic{filter:none;}
+
+  .hotbar-menu-btn{display:none;}
+
+  @media (max-width: 780px){
+    .hotbar .hotbar-slot:not(.brand):not(.cta):not(.menu-btn){display:none;}
+    .hotbar-menu-btn{
+      display:flex; width:52px; height:52px;
+      background:linear-gradient(180deg, #3a3f47, #262a30);
+      border:2px solid #14161a; box-shadow:inset 0 0 0 1px #4a505a;
+      align-items:center; justify-content:center; border-radius:3px; cursor:pointer;
+    }
+    .hotbar-drawer{
+      position:fixed; top:calc(var(--hotbar-h) + 20px); left:50%; transform:translateX(-50%);
+      background:#1c1e23; border:3px solid var(--stone-950); box-shadow:inset 0 0 0 2px #3d424c, 0 12px 30px rgba(0,0,0,0.55);
+      border-radius:6px; padding:10px; display:none; flex-direction:column; gap:4px; z-index:99; min-width:220px;
+    }
+    .hotbar-drawer.open{display:flex;}
+    .hotbar-drawer a{
+      padding:12px 14px; font-family:var(--font-display); font-weight:600; font-size:0.95rem;
+      border-radius:3px; text-decoration:none; color:var(--parchment);
+    }
+    .hotbar-drawer a:hover{background:var(--stone-700);}
   }
 
-  /* ---------- About ---------- */
-  .about{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:60px;
-    align-items:start;
+  /* ================= BUTTONS ================= */
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:14px 24px;
+    font-family:var(--font-display); font-weight:600; font-size:0.95rem;
+    border-radius:3px; border:2px solid transparent; cursor:pointer;
+    text-decoration:none; transition:transform .12s ease, box-shadow .12s ease;
   }
-  .about-copy p{
-    color:var(--text-1);
-    font-size:17px;
-    line-height:1.75;
-    margin-bottom:20px;
-    max-width:460px;
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{
+    background:var(--amber); color:#2a1c08;
+    box-shadow:0 4px 0 #9c6a1f, 0 6px 16px rgba(232,163,61,0.25);
   }
-  .stat-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
+  .btn-primary:hover{box-shadow:0 5px 0 #9c6a1f, 0 10px 22px rgba(232,163,61,0.35); transform:translateY(-1px);}
+  .btn-ghost{
+    background:transparent; border-color:var(--stone-600); color:var(--parchment);
   }
-  .stat-card{
-    background:var(--card);
-    border:1px solid var(--card-border);
-    border-radius:16px;
-    padding:34px 20px;
-    text-align:center;
-  }
-  .stat-card .num{
-    font-size:32px;
-    font-weight:800;
-    color:var(--cyan);
-    letter-spacing:-1px;
-    margin-bottom:6px;
-  }
-  .stat-card .label{font-size:13.5px;color:var(--text-1);font-weight:600;}
+  .btn-ghost:hover{border-color:var(--amber); color:var(--amber-glow);}
 
-  /* ---------- Services ---------- */
+  /* ================= HERO ================= */
+  .hero{
+    padding:calc(var(--hotbar-h) + 76px) 0 80px;
+    position:relative;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(232,163,61,0.10), transparent 55%),
+      var(--stone-950);
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center;
+  }
+  .hero h1{
+    font-size:clamp(2.4rem, 4.6vw, 3.6rem);
+    line-height:1.06;
+  }
+  .hero h1 em{
+    font-style:normal; color:var(--amber-glow);
+  }
+  .hero-sub{
+    color:var(--parchment-dim); font-size:1.1rem; max-width:480px; margin-bottom:32px;
+  }
+  .hero-ctas{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:36px;}
+  .hero-stats{display:flex; gap:32px; flex-wrap:wrap;}
+  .hero-stats .stat b{
+    display:block; font-family:var(--font-mono); font-size:1.4rem; color:var(--amber-glow);
+  }
+  .hero-stats .stat span{font-size:0.8rem; color:var(--stone-500); text-transform:uppercase; letter-spacing:0.06em;}
+
+  /* frame + changeable image system */
+  .frame{
+    position:relative;
+    border:6px solid var(--stone-800);
+    box-shadow:inset 0 0 0 2px var(--stone-600), 0 22px 50px rgba(0,0,0,0.5);
+    border-radius:4px;
+    overflow:hidden;
+    aspect-ratio:4/3.1;
+    background:var(--stone-800);
+  }
+  .frame img{width:100%; height:100%; object-fit:cover;}
+  .frame .art{width:100%; height:100%;}
+  .frame-label{
+    position:absolute; top:12px; left:12px;
+    font-family:var(--font-pixel); font-size:8px; letter-spacing:0.05em;
+    background:rgba(20,22,26,0.75); color:var(--amber-glow);
+    padding:6px 8px; border:1px solid rgba(232,163,61,0.4); border-radius:2px;
+  }
+  .change-overlay{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    background:rgba(15,16,19,0.0);
+    opacity:0; transition:opacity .18s ease, background .18s ease;
+  }
+  .frame:hover .change-overlay, .frame:focus-within .change-overlay{
+    opacity:1; background:rgba(15,16,19,0.55);
+  }
+  .change-btn{
+    font-family:var(--font-display); font-weight:600; font-size:0.82rem;
+    background:var(--parchment); color:var(--ink);
+    border:none; padding:10px 14px; border-radius:3px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .change-btn.secondary{background:rgba(20,22,26,0.85); color:var(--parchment); border:1px solid var(--stone-600);}
+  .change-btn:hover{transform:translateY(-1px);}
+
+  /* generated placeholder block art */
+  .art{position:relative; overflow:hidden;}
+  .art::before, .art::after{content:""; position:absolute; inset:0;}
+  .art-1{background:
+      repeating-linear-gradient(45deg, #2c3e2a 0 18px, #35492f 18px 36px),
+      linear-gradient(160deg, #1c241b, #33452e);
+  }
+  .art-1::before{background:
+      linear-gradient(135deg, transparent 40%, rgba(127,162,90,0.35) 41%, transparent 42%),
+      linear-gradient(135deg, transparent 60%, rgba(127,162,90,0.25) 61%, transparent 62%);
+  }
+  .art-2{background:
+      repeating-linear-gradient(90deg, #4a3626 0 22px, #5c452f 22px 44px),
+      linear-gradient(160deg, #241a10, #4a3626);
+  }
+  .art-2::before{background:repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0 6px, transparent 6px 22px);}
+  .art-3{background:
+      repeating-conic-gradient(from 45deg, #3a3f47 0deg 90deg, #4a505c 90deg 180deg);
+      background-size:34px 34px;
+  }
+  .art-3::before{background:linear-gradient(180deg, rgba(92,143,196,0.28), transparent 60%);}
+  .art-4{background:
+      repeating-linear-gradient(45deg, #5c8fc4 0 14px, #467aad 14px 28px),
+      linear-gradient(160deg, #1c2a38, #2d4a63);
+      opacity:0.9;
+  }
+  .art-4::before{background:radial-gradient(circle at 30% 30%, rgba(111,214,207,0.35), transparent 55%);}
+  .art-5{background:
+      repeating-linear-gradient(135deg, #7a5a2e 0 16px, #90692f 16px 32px),
+      linear-gradient(160deg, #2a2010, #5c4620);
+  }
+  .art-5::before{background:linear-gradient(0deg, rgba(0,0,0,0.25), transparent 50%);}
+  .art-6{background:
+      repeating-linear-gradient(-45deg, #6f9153 0 12px, #557440 12px 24px),
+      linear-gradient(160deg, #14261a, #2e4a2e);
+  }
+  .art-6::before{background:linear-gradient(120deg, rgba(232,163,61,0.2), transparent 50%);}
+
+  /* ================= SERVICES ================= */
   .services-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:22px;
-    margin-bottom:100px;
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:2px;
+    background:var(--stone-700);
+    border:2px solid var(--stone-700);
   }
   .service-card{
-    background:var(--card);
-    border:1px solid var(--card-border);
-    border-radius:18px;
+    background:var(--stone-900);
     padding:32px 26px;
-    transition:transform .25s ease, border-color .25s ease;
+    transition:background .15s ease;
   }
-  .service-card:hover{transform:translateY(-4px);border-color:rgba(34,211,238,0.4);}
-  .service-icon{font-size:30px;margin-bottom:18px;display:block;}
-  .service-card h3{font-size:18px;font-weight:800;margin-bottom:10px;}
-  .service-card p{font-size:14px;color:var(--text-1);line-height:1.55;}
+  .service-card:hover{background:var(--stone-800);}
+  .service-card .ic{font-size:26px; margin-bottom:14px; display:block;}
+  .service-card h3{font-size:1.1rem; margin-bottom:8px;}
+  .service-card p{color:var(--parchment-dim); font-size:0.92rem; margin-bottom:16px;}
+  .service-spec{
+    font-family:var(--font-mono); font-size:0.76rem; color:var(--stone-500);
+    display:flex; justify-content:space-between; border-top:1px dashed var(--stone-700); padding-top:10px;
+  }
+  .service-spec b{color:var(--amber-glow); font-weight:500;}
 
-  .process-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:22px;
+  /* ================= PORTFOLIO ================= */
+  .gallery-toolbar{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px; flex-wrap:wrap; gap:16px;}
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;
   }
-  .process-card{
-    background:var(--card);
-    border:1px solid var(--card-border);
-    border-radius:18px;
-    padding:32px 26px;
+  .g-item{background:var(--stone-900); border:1px solid var(--stone-700); border-radius:4px; overflow:hidden;}
+  .g-item .frame{border:none; border-radius:0; aspect-ratio:1/0.82; box-shadow:none;}
+  .g-cap{padding:14px 16px;}
+  .g-cap .tag{font-family:var(--font-mono); font-size:0.72rem; color:var(--stone-500); text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:4px;}
+  .g-cap [contenteditable]{
+    font-family:var(--font-display); font-weight:600; font-size:0.98rem; outline:none;
+    border-bottom:1px dashed transparent; padding-bottom:2px;
   }
-  .process-num{
-    font-size:26px;
-    font-weight:800;
-    color:var(--cyan);
-    opacity:0.55;
-    margin-bottom:16px;
-    letter-spacing:1px;
-  }
-  .process-card h3{font-size:18px;font-weight:800;margin-bottom:10px;}
-  .process-card p{font-size:14px;color:var(--text-1);line-height:1.6;}
+  .g-cap [contenteditable]:hover, .g-cap [contenteditable]:focus{border-bottom-color:var(--stone-600);}
 
-  /* ---------- CTA ---------- */
-  .cta-wrap{padding:0 60px 100px;max-width:1500px;margin:0 auto;}
-  .cta{
-    background:linear-gradient(120deg, #0d2733, #171338 85%);
-    border-radius:28px;
-    padding:70px 40px;
-    text-align:center;
+  /* ================= PROCESS ================= */
+  .process-list{display:flex; flex-direction:column;}
+  .process-step{
+    display:grid; grid-template-columns:90px 1fr; gap:24px;
+    padding:28px 0; border-top:1px solid var(--stone-700);
   }
-  .cta h2{font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:14px;}
-  .cta p{color:var(--text-1);font-size:16px;margin-bottom:32px;}
-  .cta .btn-row{justify-content:center;}
+  .process-step:last-child{border-bottom:1px solid var(--stone-700);}
+  .process-step .n{
+    font-family:var(--font-mono); font-size:2rem; color:var(--stone-700); font-weight:600;
+  }
+  .process-step h3{font-size:1.15rem; margin-bottom:6px;}
+  .process-step p{color:var(--parchment-dim); font-size:0.95rem; max-width:560px; margin:0;}
 
-  footer{
-    text-align:center;
-    padding:30px 20px 50px;
-    color:var(--text-2);
-    font-size:13.5px;
+  /* ================= PRICING ================= */
+  .pricing-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .tier{
+    border:2px solid var(--stone-700); border-radius:4px; padding:32px 26px;
+    background:var(--stone-900); display:flex; flex-direction:column;
   }
+  .tier.featured{
+    border-color:var(--amber); box-shadow:0 0 0 1px var(--amber), 0 20px 40px rgba(232,163,61,0.12);
+    background:linear-gradient(180deg, rgba(232,163,61,0.06), var(--stone-900) 40%);
+  }
+  .tier .mat{
+    font-family:var(--font-pixel); font-size:9px; letter-spacing:0.08em; margin-bottom:14px; display:inline-block;
+  }
+  .tier.wood .mat{color:#c58b4f;}
+  .tier.iron .mat{color:var(--iron);}
+  .tier.diamond .mat{color:var(--diamond);}
+  .tier h3{font-size:1.4rem; margin-bottom:4px;}
+  .tier .price{font-family:var(--font-mono); font-size:1.6rem; color:var(--amber-glow); margin-bottom:18px;}
+  .tier .price span{font-size:0.85rem; color:var(--stone-500); font-family:var(--font-body);}
+  .tier ul{list-style:none; padding:0; margin:0 0 26px; flex-grow:1;}
+  .tier li{
+    padding:8px 0 8px 22px; position:relative; font-size:0.92rem; color:var(--parchment-dim);
+    border-top:1px dashed var(--stone-700);
+  }
+  .tier li:first-child{border-top:none;}
+  .tier li::before{content:"▸"; position:absolute; left:0; color:var(--amber);}
 
-  /* ---------- Lightbox gallery ---------- */
-  .lightbox{
-    position:fixed;
-    inset:0;
-    z-index:1000;
-    background:rgba(4,7,14,0.92);
-    backdrop-filter:blur(6px);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    opacity:0;
-    visibility:hidden;
-    transition:opacity .25s ease;
-    padding:40px;
+  /* ================= TESTIMONIALS ================= */
+  .testi-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .testi{
+    background:var(--stone-900); border:1px solid var(--stone-700); border-radius:4px; padding:26px;
+    opacity:0; transform:translateY(14px); transition:opacity .5s ease, transform .5s ease;
   }
-  .lightbox.open{opacity:1;visibility:visible;}
-  .lightbox-close{
-    position:absolute;
-    top:24px;
-    right:32px;
-    width:46px;
-    height:46px;
-    border-radius:50%;
-    border:1px solid rgba(255,255,255,0.25);
-    background:rgba(255,255,255,0.06);
-    color:var(--text-0);
-    font-size:22px;
-    line-height:1;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:background .2s ease, transform .2s ease, border-color .2s ease;
+  .testi.in{opacity:1; transform:translateY(0);}
+  .testi p{font-size:0.96rem; color:var(--parchment); margin-bottom:16px;}
+  .testi .who{display:flex; align-items:center; gap:10px;}
+  .testi .avatar{
+    width:32px; height:32px; border-radius:3px;
+    background:linear-gradient(135deg, var(--amber), var(--moss));
   }
-  .lightbox-close:hover{background:rgba(255,255,255,0.14);border-color:var(--cyan);transform:rotate(90deg);}
-  .lightbox-inner{
-    width:100%;
-    max-width:1100px;
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-  }
-  .lightbox-stage{
-    position:relative;
-    width:100%;
-    aspect-ratio:16/9;
-    border-radius:18px;
-    overflow:hidden;
-    background:var(--card);
-    border:1px solid var(--card-border);
-    box-shadow:0 40px 100px rgba(0,0,0,0.6);
-  }
-  .lightbox-stage img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-  }
-  .lightbox-nav{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    width:52px;
-    height:52px;
-    border-radius:50%;
-    border:1px solid rgba(255,255,255,0.25);
-    background:rgba(4,7,14,0.55);
-    color:var(--text-0);
-    font-size:22px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:background .2s ease, border-color .2s ease;
-  }
-  .lightbox-nav:hover{background:rgba(255,255,255,0.14);border-color:var(--cyan);}
-  .lightbox-prev{left:16px;}
-  .lightbox-next{right:16px;}
-  .lightbox-caption{
-    text-align:center;
-  }
-  .lightbox-caption h3{font-size:20px;font-weight:800;margin-bottom:4px;}
-  .lightbox-caption p{font-size:13.5px;color:var(--text-1);}
-  .lightbox-thumbs{
-    display:flex;
-    gap:12px;
-    justify-content:center;
-    flex-wrap:wrap;
-  }
-  .lightbox-thumb{
-    width:74px;
-    height:50px;
-    border-radius:8px;
-    overflow:hidden;
-    border:2px solid transparent;
-    cursor:pointer;
-    opacity:0.6;
-    transition:opacity .2s ease, border-color .2s ease;
-    background:var(--card);
-  }
-  .lightbox-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
-  .lightbox-thumb.active{opacity:1;border-color:var(--cyan);}
-  .lightbox-thumb:hover{opacity:1;}
+  .testi .who b{display:block; font-size:0.85rem;}
+  .testi .who span{font-size:0.76rem; color:var(--stone-500); font-family:var(--font-mono);}
 
-  /* ---------- Responsive ---------- */
-  @media (max-width:980px){
-    header{padding:22px 26px;}
-    nav ul{
-      position:fixed;
-      top:74px;left:0;right:0;
-      flex-direction:column;
-      background:var(--bg-1);
-      padding:20px 26px;
-      gap:20px;
-      display:none;
-      border-bottom:1px solid rgba(255,255,255,0.06);
-    }
-    nav ul.open{display:flex;}
-    .nav-toggle{display:block;}
-    .hero{grid-template-columns:1fr;padding:60px 26px 80px;text-align:left;}
-    .hero-copy h1{font-size:40px;}
-    section{padding:70px 26px;}
-    .builds-grid{grid-template-columns:1fr;}
-    .builds-hint{margin-top:-24px;font-size:13.5px;}
-    .about{grid-template-columns:1fr;}
-    .services-grid{grid-template-columns:1fr 1fr;}
-    .process-grid{grid-template-columns:1fr 1fr;}
-    .lightbox{padding:20px;}
-    .lightbox-nav{width:42px;height:42px;font-size:18px;}
-  }
-  @media (max-width:560px){
-    .services-grid{grid-template-columns:1fr;}
-    .process-grid{grid-template-columns:1fr;}
-    .stat-grid{grid-template-columns:1fr 1fr;}
-    .btn-row{flex-wrap:wrap;}
-  }
+  /* ================= CONTACT ================= */
+  .contact-wrap{display:grid; grid-template-columns:1fr 1fr; gap:56px;}
+  .contact-info .info-row{display:flex; gap:14px; margin-bottom:20px; align-items:flex-start;}
+  .contact-info .ic{font-size:18px;}
+  .contact-info h4{margin-bottom:2px; font-size:0.95rem;}
+  .contact-info p{margin:0; color:var(--parchment-dim); font-size:0.88rem;}
 
-  @media (prefers-reduced-motion: reduce){
-    *{transition:none !important; scroll-behavior:auto !important;}
+  form{display:flex; flex-direction:column; gap:16px;}
+  .field label{
+    display:block; font-family:var(--font-mono); font-size:0.76rem; color:var(--stone-500);
+    text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px;
   }
+  .field input, .field select, .field textarea{
+    width:100%; background:var(--stone-900); border:1px solid var(--stone-700); border-radius:3px;
+    padding:12px 14px; color:var(--parchment); font-family:var(--font-body); font-size:0.95rem;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--amber); outline-offset:1px; border-color:var(--amber);}
+  .field textarea{resize:vertical; min-height:100px;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .form-msg{
+    font-family:var(--font-mono); font-size:0.85rem; padding:12px 14px; border-radius:3px;
+    display:none; border:1px solid var(--moss); background:rgba(127,162,90,0.1); color:var(--moss);
+  }
+  .form-msg.show{display:block;}
 
-  a:focus-visible, button:focus-visible{
-    outline:2px solid var(--cyan);
-    outline-offset:3px;
+  /* ================= FOOTER ================= */
+  footer{border-top:1px solid var(--stone-700); padding:48px 0 90px;}
+  .footer-grid{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;}
+  .footer-brand{font-family:var(--font-display); font-weight:700; font-size:1.1rem;}
+  .footer-links{display:flex; gap:22px; flex-wrap:wrap;}
+  .footer-links a{text-decoration:none; color:var(--parchment-dim); font-size:0.88rem;}
+  .footer-links a:hover{color:var(--amber-glow);}
+  .footer-fine{color:var(--stone-500); font-family:var(--font-mono); font-size:0.76rem; margin-top:22px;}
+
+  input[type="file"]{display:none;}
+
+  :focus-visible{outline:2px solid var(--amber-glow); outline-offset:2px;}
+
+  @media (max-width: 900px){
+    .hero-grid{grid-template-columns:1fr;}
+    .services-grid, .pricing-grid, .testi-grid, .gallery-grid{grid-template-columns:repeat(2,1fr);}
+    .contact-wrap{grid-template-columns:1fr;}
+  }
+  @media (max-width: 560px){
+    .services-grid, .pricing-grid, .testi-grid, .gallery-grid, .field-row{grid-template-columns:1fr;}
+    .section{padding:64px 0;}
+    .process-step{grid-template-columns:50px 1fr;}
   }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">BlockForge<span>Builds</span></div>
-  <button class="nav-toggle" aria-label="Toggle menu" id="navToggle">☰</button>
-  <nav>
-    <ul id="navList">
-      <li><a href="#builds">Builds</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
+<!-- ============ HOTBAR NAV ============ -->
+<div class="hotbar-shell">
+  <nav class="hotbar" aria-label="Primary">
+    <a href="#hero" class="hotbar-slot brand" data-target="hero" title="The Masonry">
+      <span class="num">1</span><span class="ic">🧱</span>
+      <span class="tip">Home</span>
+    </a>
+    <a href="#services" class="hotbar-slot" data-target="services">
+      <span class="num">2</span><span class="ic">⛏️</span>
+      <span class="tip">Services</span>
+    </a>
+    <a href="#portfolio" class="hotbar-slot" data-target="portfolio">
+      <span class="num">3</span><span class="ic">🖼️</span>
+      <span class="tip">Portfolio</span>
+    </a>
+    <a href="#process" class="hotbar-slot" data-target="process">
+      <span class="num">4</span><span class="ic">🗺️</span>
+      <span class="tip">Process</span>
+    </a>
+    <a href="#pricing" class="hotbar-slot" data-target="pricing">
+      <span class="num">5</span><span class="ic">💎</span>
+      <span class="tip">Pricing</span>
+    </a>
+    <a href="#reviews" class="hotbar-slot" data-target="reviews">
+      <span class="num">6</span><span class="ic">📯</span>
+      <span class="tip">Reviews</span>
+    </a>
+    <a href="#contact" class="hotbar-slot cta" data-target="contact">
+      <span class="num">7</span><span class="ic">✉️</span>
+      <span class="tip">Commission</span>
+    </a>
+    <div class="hotbar-menu-btn" id="menuBtn" role="button" tabindex="0" aria-label="Open menu">
+      <span class="ic">☰</span>
+    </div>
   </nav>
-</header>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-copy">
-    <h1>Creating <span class="accent">Custom</span> Minecraft Maps</h1>
-    <p>Custom Minecraft builds for servers, communities, and creators. Turning ideas into detailed builds.</p>
-    <div class="btn-row">
-      <a href="#builds" class="btn btn-primary">View Builds</a>
-      <a href="#contact" class="btn btn-ghost">Hire Me</a>
-    </div>
-  </div>
-  <div class="hero-art">
-    <!-- REPLACE src BELOW with your real hero screenshot, e.g. images/hero.jpg -->
-    <img class="scene" src="https://i.ibb.co/Rpz5nn15/6.png" alt="Featured Minecraft build screenshot"
-         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-    <div class="img-placeholder" style="display:none;position:absolute;inset:0;">
-      <span class="icon">🖼️</span>
-      <span>Hero image goes here</span>
-      <code>https://i.ibb.co/Rpz5nn15/6.png</code>
-    </div>
-  </div>
-</section>
-
-<!-- BUILDS -->
-<section id="builds">
-  <h2 class="section-title reveal">Featured <span>Builds</span></h2>
-  <p class="builds-hint reveal"><span class="icon">🔍</span>Click any image to see more photos of that build</p>
-  <div class="builds-grid">
-    <div class="build-card reveal" data-gallery="0">
-      <!-- REPLACE src with e.g. images/build-1.jpg -->
-      <img class="build-photo" src="https://i.ibb.co/rGYvfqm6/10.png" alt="Fantasy Kingdom Minecraft build"
-           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="img-placeholder" style="display:none;position:absolute;inset:0;">
-        <span class="icon">🏰</span>
-        <span>Cartoon Lobby</span>
-        <code>images/build-1.jpg</code>
-      </div>
-      <div class="build-badge">🔍 Click to view more</div>
-      <div class="build-label">
-        <h3>Cartoon Kingdom Lobby</h3>
-        <p>Click here to expand image</p>
-      </div>
-    </div>
-    <div class="build-card reveal" data-gallery="1">
-      <!-- REPLACE src with e.g. images/build-2.jpg -->
-      <img class="build-photo" src="https://i.ibb.co/C34KGYXH/4.png" alt="Modern City Minecraft build"
-           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="img-placeholder" style="display:none;position:absolute;inset:0;">
-        <span class="icon">🏙️</span>
-        <span>PvP Arena</span>
-        <code>images/build-2.jpg</code>
-      </div>
-      <div class="build-badge">🔍 Click to view more</div>
-      <div class="build-label">
-        <h3>PvP Arena</h3>
-        <p>Click here to expand imag</p>
-      </div>
-    </div>
-    <div class="build-card reveal" data-gallery="2">
-      <!-- REPLACE src with e.g. images/build-3.jpg -->
-      <img class="build-photo" src="https://i.ibb.co/Rpz5nn15/6.png" alt="Fantasy World Minecraft build"
-           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="img-placeholder" style="display:none;position:absolute;inset:0;">
-        <span class="icon">🌄</span>
-        <span>Tropical Spawn/Hub</span>
-        <code>images/build-3.jpg</code>
-      </div>
-      <div class="build-badge">🔍 Click to view more</div>
-      <div class="build-label">
-        <h3>Tropical Spawn/Hub</h3>
-        <p>Click here to expand imagp</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section id="about">
-  <h2 class="section-title reveal">About <span>Me (Criimzyy, Head Builder)</span></h2>
-  <div class="about">
-    <div class="about-copy reveal">
-      <p>I'm a Minecraft builder focused on creating detailed, high-quality builds for servers, creators, and communities.</p>
-      <p>My goal is to create builds that don't just look good, but feel like real worlds with atmosphere, story, and personality.</p>
-      <p>Every project is carefully planned and built with attention to detail.</p>
-    </div>
-    <div class="stat-grid reveal">
-      <div class="stat-card">
-        <div class="num">5+</div>
-        <div class="label">Years Building</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">12+</div>
-        <div class="label">Projects Completed</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">100%</div>
-        <div class="label">Custom Builds</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">24/7</div>
-        <div class="label">Communication</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SERVICES -->
-<section id="services">
-  <h2 class="section-title reveal">My <span>Services</span></h2>
-  <div class="services-grid">
-    <div class="service-card reveal">
-      <span class="service-icon">🏰</span>
-      <h3>Medieval Builds</h3>
-      <p>Castles, villages, kingdoms, and fantasy landscapes.</p>
-    </div>
-    <div class="service-card reveal">
-      <span class="service-icon">🏙️</span>
-      <h3>Modern Builds</h3>
-      <p>Cities, houses, skyscrapers, and realistic environments.</p>
-    </div>
-    <div class="service-card reveal">
-      <span class="service-icon">🌲</span>
-      <h3>Fantasy Worlds</h3>
-      <p>Magical locations, adventure maps, and unique worlds.</p>
-    </div>
-    <div class="service-card reveal">
-      <span class="service-icon">⚔️</span>
-      <h3>Server Projects</h3>
-      <p>Spawns, hubs, arenas, and multiplayer environments.</p>
-    </div>
-  </div>
-
-  <h2 class="section-title reveal">Commission <span>Process (Paid Only)</span></h2>
-  <div class="process-grid">
-    <div class="process-card reveal">
-      <div class="process-num">01</div>
-      <h3>Open a Ticket</h3>
-      <p>Press the "Order Commissions" button in #⌈🎫⌉order-here. Then fill out the information form about your build</p>
-    </div>
-    <div class="process-card reveal">
-      <div class="process-num">02</div>
-      <h3>Planning & Discussing</h3>
-      <p>Once a builder has responded, they will ask for some more detail about your project, Just to make sure we have everything correct.</p>
-    </div>
-    <div class="process-card reveal">
-      <div class="process-num">03</div>
-      <h3>Payment</h3>
-      <p>Once we are done discussing and planning about your build. We will start working on your project, then the client will have to pay us 50% of the decided cost for your build</p>
-    </div>
-    <div class="process-card reveal">
-      <div class="process-num">04</div>
-      <h3>Building Process</h3>
-      <p>During the building process the client can request images of the build. After the build is complete and the client is happy with the final product. The client will have to pay the rest of the agreed upon amount.</p>
-    </div>
-    <div class="process-card reveal">
-      <div class="process-num">05</div>
-      <h3>Final Delivery</h3>
-      <p>After all of the previous steps have been complete. We will send the world file and .schematic file to the client. </p>
-    </div>
-
-  </div>
-</section>
-
-<!-- CTA -->
-<div class="cta-wrap" id="contact">
-  <div class="cta reveal">
-    <h2>Ready To Build Something?</h2>
-    <p>Have a project idea? Contact me and let's create something amazing.</p>
-    <div class="btn-row">
-      <a href="https://discord.gg/xQ3pPRDQHD" class="btn btn-white">Discord</a>
-      <a href="#builds" class="btn btn-white">Other Portfolio Builds</a>
-    </div>
-  </div>
 </div>
 
-<footer>© 2026 BlockForgeBuilds. Minecraft portfolio.</footer>
-
-<!-- LIGHTBOX GALLERY -->
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" id="lightboxClose" aria-label="Close gallery">✕</button>
-  <div class="lightbox-inner">
-    <div class="lightbox-stage">
-      <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous image">‹</button>
-      <img id="lightboxImg" src="" alt="">
-      <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next image">›</button>
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Commissioned Builds · Bedrock & Java Edition</span>
+      <h1>You dream it.  <em>We build it.</em></h1>
+      <p class="hero-sub">BlockForge Builds creates high-quality custom Minecraft builds for everyone, bringing your ideas to life with attention to detail.</p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn btn-primary">Start a commission →</a>
+        <a href="#portfolio" class="btn btn-ghost">View the portfolio</a>
+      </div>
+      <div class="hero-stats">
+      </div>
     </div>
-    <div class="lightbox-caption">
-      <h3 id="lightboxTitle"></h3>
-      <p id="lightboxDesc"></p>
+    <div class="frame" id="heroFrame">
+      <div class="art art-1" id="heroArt"></div>
+      <img id="heroImg" alt="Featured build preview" style="display:none;">
+      <span class="frame-label">FEATURED BUILD</span>
+      <div class="change-overlay">
+        <button class="change-btn" data-upload-for="heroImg,heroArt">📤 Upload photo</button>
+        <button class="change-btn secondary" data-reset-for="heroImg,heroArt">↺ Reset</button>
+      </div>
     </div>
-    <div class="lightbox-thumbs" id="lightboxThumbs"></div>
   </div>
-</div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">What we build</span>
+      <h2>Multiple Building Styles Included</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="ic">🏚️</span>
+        <h3>Survival Bases</h3>
+        <p>Functional, defensible home bases built around your storage, farms and portals — designed to actually live in.</p>
+      </div>
+      <div class="service-card">
+        <span class="ic">🏰</span>
+        <h3>Fantasy &amp; Medieval</h3>
+        <p>Castles, keeps and villages with hand-placed detailing — no copy-pasted towers.</p>
+      </div>
+      <div class="service-card">
+        <span class="ic">🏙️</span>
+        <h3>Modern Architecture</h3>
+        <p>Glass, concrete and clean geometry for city builds, roleplay servers and showcase worlds.</p>
+      </div>
+      <div class="service-card">
+        <span class="ic">🔴</span>
+        <h3>Redstone Engineering</h3>
+        <p>Farms, doors, sorters and contraptions — built compact, TPS-friendly, and documented.</p>
+      </div>
+      <div class="service-card">
+        <span class="ic">⛰️</span>
+        <h3>Terraforming &amp; Landscaping</h3>
+        <p>Custom terrain, biomes and gardens that make an existing build feel like it grew there.</p>
+      </div>
+      <div class="service-card">
+        <span class="ic">🌐</span>
+        <h3>Server Spawns &amp; Hubs</h3>
+        <p>Spawn islands, lobby hubs and portal rooms sized for player traffic, not just screenshots.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PORTFOLIO ============ -->
+<section class="section" id="portfolio">
+  <div class="wrap">
+    <div class="gallery-toolbar">
+      <div class="section-head" style="margin-bottom:0;">
+        <span class="eyebrow">Recent commissions</span>
+        <h2>The portfolio wall</h2>
+        <p>Hover any tile to swap in your own screenshots and captions — this section is yours to customize.</p>
+      </div>
+    </div>
+    <div class="gallery-grid" id="gallery">
+      <!-- items injected identically in markup for no-js fallback -->
+      <article class="g-item">
+        <div class="frame">
+          <div class="art art-2" data-art></div>
+          <img data-img alt="Portfolio build" style="display:none;">
+          <div class="change-overlay">
+            <button class="change-btn" data-upload-for="self">📤 Upload</button>
+            <button class="change-btn secondary" data-reset-for="self">↺</button>
+          </div>
+        </div>
+        <div class="g-cap">
+          <span class="tag">Fantasy &amp; Medieval</span>
+          <div contenteditable="true" spellcheck="false">Highland Keep — full interior</div>
+        </div>
+      </article>
+      <article class="g-item">
+        <div class="frame">
+          <div class="art art-3" data-art></div>
+          <img data-img alt="Portfolio build" style="display:none;">
+          <div class="change-overlay">
+            <button class="change-btn" data-upload-for="self">📤 Upload</button>
+            <button class="change-btn secondary" data-reset-for="self">↺</button>
+          </div>
+        </div>
+        <div class="g-cap">
+          <span class="tag">Modern Architecture</span>
+          <div contenteditable="true" spellcheck="false">Cliffside glass villa</div>
+        </div>
+      </article>
+      <article class="g-item">
+        <div class="frame">
+          <div class="art art-4" data-art></div>
+          <img data-img alt="Portfolio build" style="display:none;">
+          <div class="change-overlay">
+            <button class="change-btn" data-upload-for="self">📤 Upload</button>
+            <button class="change-btn secondary" data-reset-for="self">↺</button>
+          </div>
+        </div>
+        <div class="g-cap">
+          <span class="tag">Server Spawns</span>
+          <div contenteditable="true" spellcheck="false">Lapis Isle spawn hub</div>
+        </div>
+      </article>
+      <article class="g-item">
+        <div class="frame">
+          <div class="art art-5" data-art></div>
+          <img data-img alt="Portfolio build" style="display:none;">
+          <div class="change-overlay">
+            <button class="change-btn" data-upload-for="self">📤 Upload</button>
+            <button class="change-btn secondary" data-reset-for="self">↺</button>
+          </div>
+        </div>
+        <div class="g-cap">
+          <span class="tag">Survival Bases</span>
+          <div contenteditable="true" spellcheck="false">Timber ridge homestead</div>
+        </div>
+      </article>
+      <article class="g-item">
+        <div class="frame">
+          <div class="art art-6" data-art></div>
+          <img data-img alt="Portfolio build" style="display:none;">
+          <div class="change-overlay">
+            <button class="change-btn" data-upload-for="self">📤 Upload</button>
+            <button class="change-btn secondary" data-reset-for="self">↺</button>
+          </div>
+        </div>
+        <div class="g-cap">
+          <span class="tag">Terraforming</span>
+          <div contenteditable="true" spellcheck="false">Terraced valley &amp; orchard</div>
+        </div>
+      </article>
+      <article class="g-item">
+        <div class="frame">
+          <div class="art art-1" data-art></div>
+          <img data-img alt="Portfolio build" style="display:none;">
+          <div class="change-overlay">
+            <button class="change-btn" data-upload-for="self">📤 Upload</button>
+            <button class="change-btn secondary" data-reset-for="self">↺</button>
+          </div>
+        </div>
+        <div class="g-cap">
+          <span class="tag">Redstone</span>
+          <div contenteditable="true" spellcheck="false">Compact iron farm array</div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="section" id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">How a commission runs</span>
+      <h2>Four steps, start to reveal</h2>
+    </div>
+    <div class="process-list">
+      <div class="process-step">
+        <div class="n">01</div>
+        <div>
+          <h3>Commission</h3>
+          <p>You send references, dimensions and a budget tier through the form below. We reply with scope and a fixed quote — no hourly surprises.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="n">02</div>
+        <div>
+          <h3>Blueprint</h3>
+          <p>We draft a footprint and elevation plan for your approval before any blocks go down, so changes are cheap while it's still a plan.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="n">03</div>
+        <div>
+          <h3>Build</h3>
+          <p>Construction happens on your world or a private staging server, with progress screenshots shared at each major milestone.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="n">04</div>
+        <div>
+          <h3>Walkthrough</h3>
+          <p>A guided in-game tour on handover, plus a wiring or storage guide for anything mechanical we built.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="section" id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Commission tiers</span>
+      <h2>Priced like the game tiers you already know</h2>
+      <p>Every tier is a fixed quote after scoping — these are starting points, not final invoices.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="tier wood">
+        <span class="mat">WOOD TIER</span>
+        <h3>Starter Build</h3>
+        <div class="price">From $40 <span>/ build</span></div>
+        <ul>
+          <li>Single small structure</li>
+          <li>Up to ~5,000 blocks</li>
+          <li>1 revision round</li>
+          <li>2–3 day turnaround</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Choose Wood</a>
+      </div>
+      <div class="tier iron featured">
+        <span class="mat">IRON TIER</span>
+        <h3>Full Commission</h3>
+        <div class="price">From $150 <span>/ build</span></div>
+        <ul>
+          <li>Multi-structure build or base</li>
+          <li>Up to ~40,000 blocks</li>
+          <li>Interior detailing included</li>
+          <li>3 revision rounds</li>
+          <li>4–7 day turnaround</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary">Choose Iron</a>
+      </div>
+      <div class="tier diamond">
+        <span class="mat">DIAMOND TIER</span>
+        <h3>Server Project</h3>
+        <div class="price">Custom quote</div>
+        <ul>
+          <li>Spawn hubs, terraforming, or multi-build worlds</li>
+          <li>Unlimited block scope</li>
+          <li>Dedicated build log &amp; milestones</li>
+          <li>Unlimited revisions during build</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Choose Diamond</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="section" id="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">From past clients</span>
+      <h2>What commissioners say</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi">
+        <p>"Sent one reference image and a spawn point — got back a keep I'd swear was hand-drawn by a real architect first."</p>
+        <div class="who"><div class="avatar"></div><div><b>_hollow.oak</b><span>SMP owner, 40 members</span></div></div>
+      </div>
+      <div class="testi">
+        <p>"The redstone farm came with a wiring guide, which meant our whole server could actually understand how to maintain it."</p>
+        <div class="who"><div class="avatar"></div><div><b>Marrowick</b><span>Server admin</span></div></div>
+      </div>
+      <div class="testi">
+        <p>"Blueprint review before building saved us from a footprint that would've clipped straight through a ravine."</p>
+        <div class="who"><div class="avatar"></div><div><b>petra_builds</b><span>Solo survival player</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="section" id="contact">
+  <div class="wrap contact-wrap">
+    <div>
+      <span class="eyebrow">Start a commission</span>
+      <h2>Tell us what to build</h2>
+      <p style="color:var(--parchment-dim); margin-bottom:32px;">Fill in as much as you can — dimensions, coordinates, references. Vague is fine too; we'll ask the right follow-ups.</p>
+      <div class="contact-info">
+        <div class="info-row"><span class="ic">✉️</span><div><h4>Email</h4><p>commissions@themasonry.example</p></div></div>
+        <div class="info-row"><span class="ic">💬</span><div><h4>Discord</h4><p>Fastest response — server invite sent after your first message</p></div></div>
+        <div class="info-row"><span class="ic">⏱️</span><div><h4>Response time</h4><p>Within 48 hours, every day</p></div></div>
+      </div>
+    </div>
+    <div>
+      <form id="commissionForm">
+        <div class="field-row">
+          <div class="field">
+            <label for="name">Name / IGN</label>
+            <input id="name" name="name" type="text" required placeholder="Your username">
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="platform">Platform</label>
+            <select id="platform" name="platform">
+              <option>Java Edition</option>
+              <option>Bedrock Edition</option>
+              <option>Not sure</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="tier">Budget tier</label>
+            <select id="tier" name="tier">
+              <option>Wood — from $40</option>
+              <option>Iron — from $150</option>
+              <option>Diamond — custom</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="details">Project details</label>
+          <textarea id="details" name="details" placeholder="Build type, size, references, coordinates, deadline..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="align-self:flex-start;">Send commission request →</button>
+        <div class="form-msg" id="formMsg">✓ Request drafted. Connect this form to your email or Discord webhook to receive it — see the note in the code comments.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">🧱 THE MASONRY</div>
+      <nav class="footer-links">
+        <a href="#services">Services</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#contact">Commission</a>
+      </nav>
+    </div>
+    <p class="footer-fine">© <span id="year"></span> The Masonry. Independent build service — not affiliated with Mojang or Microsoft.</p>
+  </div>
+</footer>
+
+<!-- shared hidden file input, reused for every upload trigger -->
+<input type="file" id="fileInput" accept="image/*">
 
 <script>
-  // Mobile nav toggle
-  const navToggle = document.getElementById('navToggle');
-  const navList = document.getElementById('navList');
-  navToggle.addEventListener('click', () => {
-    navList.classList.toggle('open');
-  });
-  navList.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => navList.classList.remove('open'));
-  });
+(function(){
+  "use strict";
 
-  // Scroll reveal
-  const revealEls = document.querySelectorAll('.reveal');
-  function showEl(el){ el.classList.add('in'); }
-  if ('IntersectionObserver' in window){
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){ showEl(entry.target); io.unobserve(entry.target); }
-      });
-    }, { threshold: 0, rootMargin: '0px 0px -5% 0px' });
-    revealEls.forEach(el => io.observe(el));
-    function checkVisible(){
-      revealEls.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if(rect.top < window.innerHeight && rect.bottom > 0){ showEl(el); }
-      });
-    }
-    window.addEventListener('load', checkVisible);
-    setTimeout(checkVisible, 100);
-    setTimeout(checkVisible, 500);
-  } else {
-    revealEls.forEach(showEl);
-  }
-  setTimeout(() => revealEls.forEach(showEl), 1500);
+  /* ---------- footer year ---------- */
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-  // ---------- Lightbox gallery ----------
-  // Each entry is one build's photo set. Add more src paths per build
-  // (e.g. more screenshots) and they'll show up as extra thumbnails.
-  const galleries = [
-    {
-      title: "",
-      desc: "",
-      images: ["https://i.ibb.co/q3P2xsvc/8.png", "https://i.ibb.co/pBh6Nxyt/6.png", "https://i.ibb.co/ym2gPWHM/9.png"]
-    },
-    {
-      title: "",
-      desc: "",
-      images: ["https://i.ibb.co/dw4hNpdH/3.png", "https://i.ibb.co/zTVfNrc4/2.png", "https://i.ibb.co/whcnP4YX/1.png"]
-    },
-    {
-      title: "",
-      desc: "",
-      images: ["https://i.ibb.co/Z1gy0K3N/5.png", "https://i.ibb.co/zV92zP2q/7.png", "https://i.ibb.co/BHzXXSCp/7.png"]
-    }
-  ];
+  /* ---------- mobile drawer ---------- */
+  const menuBtn = document.getElementById('menuBtn');
+  const drawer = document.getElementById('drawer');
+  function toggleDrawer(){ drawer.classList.toggle('open'); }
+  menuBtn.addEventListener('click', toggleDrawer);
+  menuBtn.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleDrawer(); }});
+  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => drawer.classList.remove('open')));
 
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightboxImg');
-  const lightboxTitle = document.getElementById('lightboxTitle');
-  const lightboxDesc = document.getElementById('lightboxDesc');
-  const lightboxThumbs = document.getElementById('lightboxThumbs');
-  const lightboxClose = document.getElementById('lightboxClose');
-  const lightboxPrev = document.getElementById('lightboxPrev');
-  const lightboxNext = document.getElementById('lightboxNext');
-
-  let currentGallery = 0;
-  let currentIndex = 0;
-
-  function renderLightbox(){
-    const g = galleries[currentGallery];
-    lightboxImg.src = g.images[currentIndex];
-    lightboxImg.alt = g.title + ' photo ' + (currentIndex + 1);
-    lightboxTitle.textContent = g.title;
-    lightboxDesc.textContent = g.desc;
-
-    lightboxThumbs.innerHTML = '';
-    g.images.forEach((src, i) => {
-      const thumb = document.createElement('div');
-      thumb.className = 'lightbox-thumb' + (i === currentIndex ? ' active' : '');
-      const img = document.createElement('img');
-      img.src = src;
-      img.alt = g.title + ' thumbnail ' + (i + 1);
-      thumb.appendChild(img);
-      thumb.addEventListener('click', () => {
-        currentIndex = i;
-        renderLightbox();
-      });
-      lightboxThumbs.appendChild(thumb);
+  /* ---------- hotbar active-slot highlighting ---------- */
+  const slots = Array.from(document.querySelectorAll('.hotbar-slot[data-target]'));
+  const sections = slots.map(s => document.getElementById(s.dataset.target)).filter(Boolean);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const slot = slots.find(s => s.dataset.target === entry.target.id);
+      if(!slot) return;
+      if(entry.isIntersecting){
+        slots.forEach(s => s.classList.remove('active'));
+        slot.classList.add('active');
+      }
     });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  sections.forEach(sec => io.observe(sec));
+
+  /* ---------- changeable images ---------- */
+  const fileInput = document.getElementById('fileInput');
+  let pendingTarget = null; // {imgEl, artEl}
+
+  function resolveTargets(btn){
+    const spec = btn.dataset.uploadFor || btn.dataset.resetFor;
+    if(spec === 'self'){
+      const frame = btn.closest('.frame');
+      return { img: frame.querySelector('[data-img]'), art: frame.querySelector('[data-art]') };
+    }
+    const [imgId, artId] = spec.split(',');
+    return { img: document.getElementById(imgId), art: document.getElementById(artId) };
   }
 
-  function openLightbox(galleryIndex){
-    currentGallery = galleryIndex;
-    currentIndex = 0;
-    renderLightbox();
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeLightbox(){
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  document.querySelectorAll('.build-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const idx = parseInt(card.getAttribute('data-gallery'), 10);
-      openLightbox(idx);
+  document.querySelectorAll('[data-upload-for]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pendingTarget = resolveTargets(btn);
+      fileInput.value = '';
+      fileInput.click();
     });
   });
 
-  lightboxClose.addEventListener('click', closeLightbox);
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) closeLightbox();
+  document.querySelectorAll('[data-reset-for]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = resolveTargets(btn);
+      if(t.img){ t.img.style.display = 'none'; t.img.src = ''; }
+      if(t.art){ t.art.style.display = ''; }
+    });
   });
-  lightboxPrev.addEventListener('click', () => {
-    const g = galleries[currentGallery];
-    currentIndex = (currentIndex - 1 + g.images.length) % g.images.length;
-    renderLightbox();
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files && fileInput.files[0];
+    if(!file || !pendingTarget) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if(pendingTarget.img){
+        pendingTarget.img.src = e.target.result;
+        pendingTarget.img.style.display = 'block';
+      }
+      if(pendingTarget.art){
+        pendingTarget.art.style.display = 'none';
+      }
+    };
+    reader.readAsDataURL(file);
   });
-  lightboxNext.addEventListener('click', () => {
-    const g = galleries[currentGallery];
-    currentIndex = (currentIndex + 1) % g.images.length;
-    renderLightbox();
+
+  /* ---------- testimonial reveal on scroll ---------- */
+  const testis = document.querySelectorAll('.testi');
+  const revealIo = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        revealIo.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  testis.forEach(t => revealIo.observe(t));
+
+  /* ---------- contact form (front-end only demo) ---------- */
+  const form = document.getElementById('commissionForm');
+  const msg = document.getElementById('formMsg');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    msg.classList.add('show');
+    msg.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   });
-  document.addEventListener('keydown', (e) => {
-    if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') lightboxPrev.click();
-    if (e.key === 'ArrowRight') lightboxNext.click();
-  });
+
+})();
 </script>
-
 </body>
-</html>
+</html>.+
