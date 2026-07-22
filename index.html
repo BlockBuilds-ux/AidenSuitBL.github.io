@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,7 +58,7 @@
   button{font-family:inherit;}
 
   .wrap{
-    max-width:1160px;
+    max-width:1500px;
     margin:0 auto;
     padding:0 28px;
   }
@@ -231,7 +232,7 @@
     box-shadow:inset 0 0 0 2px var(--stone-600), 0 22px 50px rgba(0,0,0,0.5);
     border-radius:4px;
     overflow:hidden;
-    aspect-ratio:4/3.1;
+    aspect-ratio:16/9;
     background:var(--stone-800);
   }
   .frame img{width:100%; height:100%; object-fit:cover;}
@@ -322,10 +323,34 @@
   /* ================= PORTFOLIO ================= */
   .gallery-toolbar{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px; flex-wrap:wrap; gap:16px;}
   .gallery-grid{
-    display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;
+    display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:40px;
   }
-  .g-item{background:var(--stone-900); border:1px solid var(--stone-700); border-radius:4px; overflow:hidden;}
-  .g-item .frame{border:none; border-radius:0; aspect-ratio:1/0.82; box-shadow:none;}
+  .g-item{
+    background:var(--stone-900);
+    border:1px solid var(--stone-700);
+    border-radius:8px;
+    overflow:hidden;
+    transition:.3s;
+}
+.g-item:hover{
+    transform:translateY(-8px);
+    border-color:var(--amber);
+    box-shadow:0 20px 40px rgba(0,0,0,.45);
+}
+  .g-item .frame{
+    height:500px;
+    border:none;
+    border-radius:0;
+    box-shadow:none;
+    aspect-ratio:auto;
+}
+.g-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:transform .35s ease;
+}
+.g-item:hover img{transform:scale(1.05);}
   .g-cap{padding:14px 16px;}
   .g-cap .tag{font-family:var(--font-mono); font-size:0.72rem; color:var(--stone-500); text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:4px;}
   .g-cap [contenteditable]{
@@ -485,7 +510,7 @@
 <section class="hero" id="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="eyebrow">Commissioned Builds · Any Edition</span>
+      <span class="eyebrow">Commissioned Builds · Bedrock & Java Edition</span>
       <h1>We build what you can only <em>describe</em>.</h1>
       <p class="hero-sub">BlockForge Builds creates high-quality custom Minecraft builds for everyone, bringing your ideas to life with attention to detail.</p>
       <div class="hero-ctas">
@@ -496,14 +521,9 @@
       </div>
     </div>
     <div class="frame" id="heroFrame">
-      <div class="art art-1" id="heroArt"></div>
-      <img id="heroImg" alt="Featured build preview" style="display:none;">
+      <img src="https://i.ibb.co/Rpz5nn15/6.png" alt="Featured build preview">
       <span class="frame-label">FEATURED BUILD</span>
-      <div class="change-overlay">
-        <button class="change-btn" data-upload-for="heroImg,heroArt">📤 Upload photo</button>
-        <button class="change-btn secondary" data-reset-for="heroImg,heroArt">↺ Reset</button>
-      </div>
-    </div>
+</div>
   </div>
 </section>
 
@@ -556,94 +576,64 @@
     <div class="gallery-toolbar">
       <div class="section-head" style="margin-bottom:0;">
         <span class="eyebrow">Recent commissions</span>
-        <h2>The portfolio wall</h2>
-        <p>Hover any tile to swap in your own screenshots and captions — this section is yours to customize.</p>
+        <h2>The Portfolio Wall</h2>
+        <p>Here are multiple examples of what our building service has to offer.</p>
       </div>
     </div>
     <div class="gallery-grid" id="gallery">
       <!-- items injected identically in markup for no-js fallback -->
       <article class="g-item">
         <div class="frame">
-          <div class="art art-2" data-art></div>
-          <img data-img alt="Portfolio build" style="display:none;">
-          <div class="change-overlay">
-            <button class="change-btn" data-upload-for="self">📤 Upload</button>
-            <button class="change-btn secondary" data-reset-for="self">↺</button>
-          </div>
-        </div>
+          <img src="https://i.ibb.co/Rpz5nn15/6.png" alt="Portfolio build">
+</div>
         <div class="g-cap">
-          <span class="tag">Fantasy &amp; Medieval</span>
-          <div contenteditable="true" spellcheck="false">Highland Keep — full interior</div>
+          <span class="tag"></span>
+          <div contenteditable="true" spellcheck="false">Tropical Beach Spawn/Lobby/Hub</div>
         </div>
       </article>
       <article class="g-item">
         <div class="frame">
-          <div class="art art-3" data-art></div>
-          <img data-img alt="Portfolio build" style="display:none;">
-          <div class="change-overlay">
-            <button class="change-btn" data-upload-for="self">📤 Upload</button>
-            <button class="change-btn secondary" data-reset-for="self">↺</button>
-          </div>
-        </div>
+          <img src="https://i.ibb.co/C34KGYXH/4.png" alt="Portfolio build">
+</div>
         <div class="g-cap">
-          <span class="tag">Modern Architecture</span>
-          <div contenteditable="true" spellcheck="false">Cliffside glass villa</div>
+          <span class="tag"></span>
+          <div contenteditable="true" spellcheck="false">Castle Fighting Arena</div>
         </div>
       </article>
       <article class="g-item">
         <div class="frame">
-          <div class="art art-4" data-art></div>
-          <img data-img alt="Portfolio build" style="display:none;">
-          <div class="change-overlay">
-            <button class="change-btn" data-upload-for="self">📤 Upload</button>
-            <button class="change-btn secondary" data-reset-for="self">↺</button>
-          </div>
-        </div>
+          <img src="https://i.ibb.co/nMW4QmfQ/3.png" alt="Portfolio build">
+</div>
         <div class="g-cap">
-          <span class="tag">Server Spawns</span>
-          <div contenteditable="true" spellcheck="false">Lapis Isle spawn hub</div>
+          <span class="tag"></span>
+          <div contenteditable="true" spellcheck="false">Fantasy Medieval Spawn/Lobby/Hub</div>
         </div>
       </article>
       <article class="g-item">
         <div class="frame">
-          <div class="art art-5" data-art></div>
-          <img data-img alt="Portfolio build" style="display:none;">
-          <div class="change-overlay">
-            <button class="change-btn" data-upload-for="self">📤 Upload</button>
-            <button class="change-btn secondary" data-reset-for="self">↺</button>
-          </div>
-        </div>
+          <img src="https://i.ibb.co/rGYvfqm6/10.png" alt="Portfolio build">
+</div>
         <div class="g-cap">
-          <span class="tag">Survival Bases</span>
-          <div contenteditable="true" spellcheck="false">Timber ridge homestead</div>
+          <span class="tag">s</span>
+          <div contenteditable="true" spellcheck="false">Cartoony Medieval Spawn/Lobby/Hub</div>
         </div>
       </article>
       <article class="g-item">
         <div class="frame">
-          <div class="art art-6" data-art></div>
-          <img data-img alt="Portfolio build" style="display:none;">
-          <div class="change-overlay">
-            <button class="change-btn" data-upload-for="self">📤 Upload</button>
-            <button class="change-btn secondary" data-reset-for="self">↺</button>
-          </div>
-        </div>
+          <img src="https://i.ibb.co/qFN4Ct9B/1-1.png" alt="Portfolio build">
+</div>
         <div class="g-cap">
-          <span class="tag">Terraforming</span>
-          <div contenteditable="true" spellcheck="false">Terraced valley &amp; orchard</div>
+          <span class="tag"></span>
+          <div contenteditable="true" spellcheck="false">Purple Medieval Spawn/Lobby/Hub</div>
         </div>
       </article>
       <article class="g-item">
         <div class="frame">
-          <div class="art art-1" data-art></div>
-          <img data-img alt="Portfolio build" style="display:none;">
-          <div class="change-overlay">
-            <button class="change-btn" data-upload-for="self">📤 Upload</button>
-            <button class="change-btn secondary" data-reset-for="self">↺</button>
-          </div>
-        </div>
+          <img src="https://i.ibb.co/DHPqg69Z/1.png" alt="Portfolio build">
+</div>
         <div class="g-cap">
-          <span class="tag">Redstone</span>
-          <div contenteditable="true" spellcheck="false">Compact iron farm array</div>
+          <span class="tag"></span>
+          <div contenteditable="true" spellcheck="false">Japanese Sumo Map</div>
         </div>
       </article>
     </div>
@@ -654,36 +644,50 @@
 <section class="section" id="process">
   <div class="wrap">
     <div class="section-head">
-      <span class="eyebrow">How a commission runs</span>
-      <h2>Four steps, start to reveal</h2>
+      <span class="eyebrow">How to order a commission</span>
+      <h2>How to order a commission in 6 basic steps</h2>
     </div>
     <div class="process-list">
       <div class="process-step">
         <div class="n">01</div>
         <div>
-          <h3>Commission</h3>
-          <p>You send references, dimensions and a budget tier through the form below. We reply with scope and a fixed quote — no hourly surprises.</p>
+          <h3>Create a ticket.</h3>
+          <p>Press the "Order Commissions" button in ⁠⌈🎫⌉order-here. Then fill out the information form about your build</p>
         </div>
       </div>
       <div class="process-step">
         <div class="n">02</div>
         <div>
-          <h3>Blueprint</h3>
-          <p>We draft a footprint and elevation plan for your approval before any blocks go down, so changes are cheap while it's still a plan.</p>
+          <h3>Wait for our team to respond.</h3>
+          <p>After you have submitted the form a channel will be created, All you have to do is wait for a builder to respond. It may take up to 1-8 hours for our team to respond</p>
         </div>
       </div>
       <div class="process-step">
         <div class="n">03</div>
         <div>
-          <h3>Build</h3>
-          <p>Construction happens on your world or a private staging server, with progress screenshots shared at each major milestone.</p>
+          <h3>Planning & Discuss.</h3>
+          <p>Once a builder has responded, they will ask for some more detail about your project, Just to make sure we have everything correct.</p>
         </div>
       </div>
       <div class="process-step">
         <div class="n">04</div>
         <div>
-          <h3>Walkthrough</h3>
-          <p>A guided in-game tour on handover, plus a wiring or storage guide for anything mechanical we built.</p>
+          <h3>Payment</h3>
+          <p>Once we are done discussing and planning about your build. We will start working on your project, then the client will have to pay us 50% of the decided cost for your build</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="n">05</div>
+        <div>
+          <h3>Final Build</h3>
+          <p>During the building process the client can request images of the build. After the build is complete and the client is happy with the final product. The client will have to pay the rest of the agreed upon amount.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="n">06</div>
+        <div>
+          <h3>Final Step</h3>
+          <p>After all of the previous steps have been complete. We will send the world file and .schematic file to the client. </p>
         </div>
       </div>
     </div>
@@ -723,7 +727,7 @@
       <h2>Tell us what to build</h2>
       <p style="color:var(--parchment-dim); margin-bottom:32px;">Fill in as much information as possible when filling out the Commissions Order Form</p>
       <div class="contact-info">
-        <div class="info-row"><span class="ic">💬</span><div><h4>Discord</h4><p>Fastest response — server invite sent after your first message <a href="https://discord.com/invite/KbKqNZFGUv">Click Here</a> to join the discord!</p></div></div>
+        <div class="info-row"><span class="ic">💬</span><div><h4>Discord</h4><p>Join our discord and order a custom build from us! <a href="https://discord.com/invite/KbKqNZFGUv">Click Here</a> to join the discord!</p></div></div>
         <div class="info-row"><span class="ic">⏱️</span><div><h4>Response time</h4><p>Within 1-8 hours, every day</p></div></div>
       </div>
     </div>
@@ -736,7 +740,7 @@
 <footer>
   <div class="wrap">
     <div class="footer-grid">
-      <div class="footer-brand">🧱 THE MASONRY</div>
+      <div class="footer-brand">BlockForge Builds</div>
       <nav class="footer-links">
         <a href="#services">Services</a>
         <a href="#portfolio">Portfolio</a>
@@ -749,7 +753,7 @@
 </footer>
 
 <!-- shared hidden file input, reused for every upload trigger -->
-<input type="file" id="fileInput" accept="image/*">
+
 
 <script>
 (function(){
@@ -780,52 +784,6 @@
     });
   }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
   sections.forEach(sec => io.observe(sec));
-
-  /* ---------- changeable images ---------- */
-  const fileInput = document.getElementById('fileInput');
-  let pendingTarget = null; // {imgEl, artEl}
-
-  function resolveTargets(btn){
-    const spec = btn.dataset.uploadFor || btn.dataset.resetFor;
-    if(spec === 'self'){
-      const frame = btn.closest('.frame');
-      return { img: frame.querySelector('[data-img]'), art: frame.querySelector('[data-art]') };
-    }
-    const [imgId, artId] = spec.split(',');
-    return { img: document.getElementById(imgId), art: document.getElementById(artId) };
-  }
-
-  document.querySelectorAll('[data-upload-for]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      pendingTarget = resolveTargets(btn);
-      fileInput.value = '';
-      fileInput.click();
-    });
-  });
-
-  document.querySelectorAll('[data-reset-for]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const t = resolveTargets(btn);
-      if(t.img){ t.img.style.display = 'none'; t.img.src = ''; }
-      if(t.art){ t.art.style.display = ''; }
-    });
-  });
-
-  fileInput.addEventListener('change', () => {
-    const file = fileInput.files && fileInput.files[0];
-    if(!file || !pendingTarget) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if(pendingTarget.img){
-        pendingTarget.img.src = e.target.result;
-        pendingTarget.img.style.display = 'block';
-      }
-      if(pendingTarget.art){
-        pendingTarget.art.style.display = 'none';
-      }
-    };
-    reader.readAsDataURL(file);
-  });
 
   /* ---------- testimonial reveal on scroll ---------- */
   const testis = document.querySelectorAll('.testi');
